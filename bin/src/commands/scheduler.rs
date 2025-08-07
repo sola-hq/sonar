@@ -27,7 +27,7 @@ impl Command {
     /// Execute `node` command
     pub async fn execute(self) -> anyhow::Result<()> {
         dotenv().ok();
-        let graceful_shutdown_timeout = tokio::time::Duration::from_secs(10);
+        let graceful_shutdown_timeout = tokio::time::Duration::from_secs(5);
 
         let db = make_db_from_env().await.expect("Failed to make db");
         let db = Arc::new(db);

@@ -10,7 +10,7 @@ sonar-db = { workspace = true }
 sonar-sol-price = { workspace = true }
 sonar-token-metadata = { workspace = true }
 
-backon = { workspace = true }
+# backon = { workspace = true }
 tracing = { workspace = true }
 tracing-otel-extra = { workspace = true }
 

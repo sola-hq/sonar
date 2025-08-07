@@ -6,7 +6,7 @@ use crate::{
     metrics::NodeMetrics,
 };
 use anyhow::Result;
-use backon::{ExponentialBuilder, Retryable};
+// use backon::{ExponentialBuilder, Retryable};
 use carbon_core::{
     instruction::{InstructionMetadata, NestedInstruction},
     transaction::TransactionMetadata,
@@ -325,8 +325,17 @@ pub async fn get_swap_event_with_token_transfer_details(
         transaction_metadata,
     );
 
-    let f = || get_token_metadata_with_data(swap_event.pubkey.as_str(), kv_store, db);
-    let supply = match f.retry(ExponentialBuilder::default()).await {
+    // let f = || get_token_metadata_with_data(swap_event.pubkey.as_str(), kv_store, db);
+    // let supply = match f.retry(ExponentialBuilder::default()).await {
+    //     Ok(token) => token.supply,
+    //     Err(e) => {
+    //         error!("Failed to get token metadata for {} {:?}", swap_event.pubkey, e);
+    //         0.0
+    //     }
+    // };
+
+    let supply = match get_token_metadata_with_data(swap_event.pubkey.as_str(), kv_store, db).await
+    {
         Ok(token) => token.supply,
         Err(e) => {
             error!("Failed to get token metadata for {} {:?}", swap_event.pubkey, e);

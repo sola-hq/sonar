@@ -41,8 +41,8 @@ async-trait = { version = "0.1.88" }
 axum = { version = "0.8.4", features = ["ws"] }
 axum-otel = { version = "0.30.8" }
 
-# Backoff
-backon = { version = "1.5.1" }
+# # Backoff
+# backon = { version = "1.5.1" }
 
 # storage
 bb8-redis = { version = "0.24.0" }

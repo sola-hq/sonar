@@ -1,0 +1,14 @@
+.DS_Store
+.vscode
+.github/
+target/
+debug/
+.env
+scripts
+Dockerfile
+_*
+contrib
+db*
+dist
+doc
+examples

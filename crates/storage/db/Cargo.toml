@@ -1,0 +1,47 @@
+[package]
+name = "sonar-db"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# tracing + otel
+tracing = { workspace = true }
+
+# errors crates
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+
+# async crates
+async-stream = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+
+# tokio
+tokio = { workspace = true }
+
+# serde
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# strum
+strum = { workspace = true, features = ["derive"] }
+strum_macros = { workspace = true }
+
+# redis
+redis = { workspace = true, features = ["tokio-comp"] }
+bb8-redis = { workspace = true }
+
+# clickhouse
+clickhouse = { workspace = true, features = ["native-tls", "inserter"] }
+
+# mpl token metadata
+mpl-token-metadata = { workspace = true }
+
+# spl token metadata interface
+spl-token-metadata-interface = { workspace = true }

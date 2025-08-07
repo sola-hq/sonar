@@ -1,0 +1,148 @@
+[workspace]
+members = [
+	"bin",
+	"crates/api",
+	"crates/ingestor",
+	"crates/scheduler",
+	"crates/sol-price",
+	"crates/storage/db",
+	"crates/token-metadata",
+]
+
+# Explicitly set the resolver to version 2, which is the default for packages with edition >= 2021
+# https://doc.rust-lang.org/edition-guide/rust-2021/default-cargo-resolver.html
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.85"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/sola-hq/sonar"
+repository = "https://github.com/sola-hq/sonar"
+exclude = [".github/"]
+
+[workspace.dependencies]
+# sonar crates
+sonar-api = { path = "crates/api" }
+sonar-db = { path = "crates/storage/db" }
+sonar-ingestor = { path = "crates/ingestor" }
+sonar-scheduler = { path = "crates/scheduler" }
+sonar-sol-price = { path = "crates/sol-price" }
+sonar-token-metadata = { path = "crates/token-metadata" }
+
+# Error handling
+anyhow = { version = "1.0.98" }
+
+# Async-trait
+async-stream = { version = "0.3.6" }
+async-trait = { version = "0.1.88" }
+
+axum = { version = "0.8.4", features = ["ws"] }
+axum-otel = { version = "0.30.8" }
+
+# Backoff
+backon = { version = "1.5.1" }
+
+# storage
+bb8-redis = { version = "0.24.0" }
+
+# Bigdecimal
+bigdecimal = "0.4.8"
+
+# need yellowstone protos compat
+carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+
+# carbon datasources
+carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+
+# Serde
+chrono = { version = "0.4.40", features = ["serde"] }
+
+# Clap
+clap = { version = "4.5.37", features = ["derive", "env"] }
+clickhouse = { version = "0.13.3", features = ["native-tls", "inserter"] }
+dotenvy = { version = "0.15.7" }
+futures = { version = "0.3" }
+futures-util = { version = "0.3.30" }
+
+# helius should be same version used in carbon-helius-atlas-ws-datasource
+helius = { version = "0.2.6", git = "https://github.com/helius-labs/helius-rust-sdk.git", rev = "a1316c5" }
+
+# spl-token
+mpl-token-metadata = { version = "5.1.0" }
+redis = { version = "0.32.1", features = ["tokio-comp", "aio"] }
+reqwest = { version = "0.12.15", features = ["json"] }
+serde = { version = "1.0.152", features = ["derive"] }
+serde_json = "1.0.25"
+serde_with = { version = "3.13.0", features = ["chrono"] }
+
+# websocket
+socketioxide = { version = "0.17.2", features = ["state"] }
+socketioxide-redis = { version = "0.2.2" }
+
+# need yellowstone protos compat
+solana-account = "2.2"
+solana-account-decoder = "2.2"
+solana-client = "2.2"
+solana-commitment-config = "2.2"
+solana-instruction = { version = "2.2", default-features = false }
+solana-program = "2.2"
+solana-pubkey = { version = "2.2", features = ["serde", "borsh", "curve25519"] }
+solana-signature = { version = "2.2", features = ["rand"] }
+solana-transaction = "2.2"
+solana-transaction-status = "2.2"
+spl-token = { version = "7.0.0" }
+spl-token-2022 = { version = "7.0.0" }
+spl-token-metadata-interface = { version = "0.6.0" }
+
+# Strum
+strum = { version = "0.27", features = ["derive"] }
+strum_macros = { version = "0.27" }
+thiserror = { version = "2.0.12" }
+
+# Tokio
+tokio = { version = "1.44.2", features = ["full"] }
+tokio-cron-scheduler = { version = "0.14.0", features = ["signal"] }
+tokio-tungstenite = { version = "0.20.1", features = ["native-tls"] }
+tower = "0.5.2"
+tower-http = { version = "0.6.4", features = [
+	"trace",
+	"cors",
+	"request-id",
+	"catch-panic",
+	"timeout",
+	"add-extension",
+	"cors",
+	"set-header",
+	"compression-full",
+] }
+
+# tracing
+tracing = { version = "0.1.41" }
+tracing-error = { version = "0.2.0" }
+tracing-otel-extra = { version = "0.30.8" }
+url = "2.5.4"
+validator = { version = "0.20.0", features = ["derive"] }
+
+# geyser
+yellowstone-grpc-proto = { version = "6.0.0" }
+
+[workspace.dependencies.curve25519-dalek]
+git = "https://github.com/anza-xyz/curve25519-dalek.git"
+rev = "b500cdc2a920cd5bff9e2dd974d7b97349d61464"

@@ -1,0 +1,44 @@
+[package]
+name = "sonar-sol-price"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+# sonar crates
+sonar-db = { workspace = true }
+
+# tracing + otel
+tracing = { workspace = true }
+
+# errors crates
+anyhow = { workspace = true }
+
+# async crates
+async-trait = { workspace = true }
+futures-util = { workspace = true }
+
+# tokio
+tokio = { workspace = true, features = ["rt", "macros"] }
+tokio-tungstenite = { workspace = true, features = ["native-tls"] }
+
+# serde
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# chrono
+chrono = { workspace = true }
+
+# url
+reqwest = { workspace = true, features = ["json"] }
+url = { workspace = true }
+
+[dev-dependencies]
+tracing-otel-extra = { workspace = true }
+
+[features]
+default = ["binance"]
+binance = []

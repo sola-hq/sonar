@@ -1,0 +1,8 @@
+{
+  "toml": {
+    "useTabs": false,
+    "cargo.applyConventions": false,
+    "indentWidth": 4
+  },
+  "includes": ["**/*.toml"]
+}

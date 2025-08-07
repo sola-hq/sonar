@@ -1,0 +1,40 @@
+[package]
+name = "sonar-token-metadata"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+exclude.workspace = true
+
+[dependencies]
+# sonar crates
+sonar-db = { workspace = true }
+
+# tracing
+tracing = { workspace = true }
+
+# error handling
+anyhow = { workspace = true }
+
+# bigdecimal
+bigdecimal = { workspace = true }
+
+# mpl
+mpl-token-metadata = { workspace = true }
+
+# spl
+spl-token-2022 = { workspace = true }
+spl-token-metadata-interface = { workspace = true }
+
+# solana
+solana-pubkey = { workspace = true }
+solana-client = { workspace = true }
+solana-commitment-config = { workspace = true }
+solana-program = { workspace = true }
+solana-signature = { workspace = true }
+
+[dev-dependencies]
+dotenvy = { workspace = true }
+tokio = { workspace = true }

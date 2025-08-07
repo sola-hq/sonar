@@ -1,0 +1,57 @@
+[package]
+name = "sonar-api"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[dependencies]
+sonar-db = { workspace = true }
+sonar-token-metadata = { workspace = true }
+
+# tracing
+tracing = { workspace = true }
+tracing-otel-extra = { workspace = true, features = ["env", "logger"] }
+tracing-error = { workspace = true }
+
+# dotenvy
+dotenvy = { workspace = true }
+
+# tokio
+tokio = { workspace = true }
+async-trait = { workspace = true }
+futures = { workspace = true }
+futures-util = { workspace = true }
+
+# axum
+axum = { workspace = true }
+tower = { workspace = true }
+tower-http = { workspace = true }
+axum-otel = { workspace = true }
+
+# error
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+
+# bigdecimal
+bigdecimal = { workspace = true }
+
+# serde
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+serde_with = { workspace = true }
+
+# validator
+validator = { workspace = true, features = ["derive"] }
+strum = { workspace = true }
+strum_macros = { workspace = true }
+
+# chrono
+chrono = { workspace = true }
+
+# socketioxide
+socketioxide = { workspace = true }
+socketioxide-redis = { workspace = true }

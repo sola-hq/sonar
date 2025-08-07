@@ -136,7 +136,7 @@ tower-http = { version = "0.6.4", features = [
 # tracing
 tracing = { version = "0.1.41" }
 tracing-error = { version = "0.2.0" }
-tracing-otel-extra = { version = "0.30.8" }
+tracing-otel-extra = { version = "0.30.10", features = ["logger", "env"] }
 url = "2.5.4"
 validator = { version = "0.20.0", features = ["derive"] }
 

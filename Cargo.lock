@@ -8517,6 +8517,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "tracing-appender"
+version = "0.2.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3566e8ce28cc0a3fe42519fc80e6b4c943cc4c8cef275620eb8dac2d3d4e06cf"
+dependencies = [
+ "crossbeam-channel",
+ "thiserror 1.0.69",
+ "time",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "tracing-attributes"
 version = "0.1.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8578,9 +8590,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-opentelemetry-extra"
-version = "0.30.8"
+version = "0.30.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "df401e929ff51f9a782d05ad91cc7ec140e1d83f5bfe5864ddb6f51cf4bb8bed"
+checksum = "4dbc07226fa149361a6afd2f77a85082187df2ef447f3364a8d72e9f34b12460"
 dependencies = [
  "anyhow",
  "opentelemetry",
@@ -8593,9 +8605,9 @@ dependencies = [
 
 [[package]]
 name = "tracing-otel-extra"
-version = "0.30.8"
+version = "0.30.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a1184eec08e753fe4a5223a0984e13c943376597bf61605332093384e9295b1c"
+checksum = "6ed0f6548e8f24615cc84637e708fbaacc18a93d36d4d0b567754cb36457837d"
 dependencies = [
  "anyhow",
  "envy",
@@ -8605,6 +8617,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tracing",
+ "tracing-appender",
  "tracing-opentelemetry",
  "tracing-opentelemetry-extra",
  "tracing-subscriber",

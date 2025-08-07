@@ -617,15 +617,14 @@ dependencies = [
 
 [[package]]
 name = "axum-otel"
-version = "0.30.8"
+version = "0.30.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bca89e36c9e4875c3bc8c0aa0ee76e00c6789624496647e4c1dfd287f968fc6f"
+checksum = "2e2f109b1dbb73e227f8767d294494a78b31bd9ade3fe15b93378c42ecfca0e2"
 dependencies = [
  "axum 0.8.4",
  "opentelemetry",
  "tower-http",
  "tracing",
- "tracing-opentelemetry",
  "tracing-otel-extra",
 ]
 

@@ -39,7 +39,7 @@ async-stream = { version = "0.3.6" }
 async-trait = { version = "0.1.88" }
 
 axum = { version = "0.8.4", features = ["ws"] }
-axum-otel = { version = "0.30.8" }
+axum-otel = { version = "0.30.10" }
 
 # # Backoff
 # backon = { version = "1.5.1" }

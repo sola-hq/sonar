@@ -66,6 +66,7 @@ carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev =
 carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
 carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
 carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
 carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
 carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
 carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
@@ -98,6 +99,7 @@ socketioxide-redis = { version = "0.2.2" }
 
 # need yellowstone protos compat
 solana-account = "2.2"
+solana-account-decoder-client-types = "2.2.20"
 solana-account-decoder = "2.2"
 solana-client = "2.2"
 solana-commitment-config = "2.2"

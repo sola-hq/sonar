@@ -2,7 +2,6 @@ pub mod cache;
 #[cfg(not(feature = "binance"))]
 pub mod clmm;
 pub mod constants;
-pub mod math;
 
 #[cfg(feature = "binance")]
 pub mod binance;

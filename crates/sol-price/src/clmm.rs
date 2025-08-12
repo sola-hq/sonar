@@ -53,7 +53,7 @@ use solana_pubkey::Pubkey;
 use sonar_db::{KvStore, MessageQueue, Trade};
 use std::{str::FromStr, sync::Arc};
 use tokio::sync::{mpsc, RwLock};
-use tracing::{error, info, warn};
+use tracing::{error, info};
 
 /// Raydium CLMM price stream configuration
 #[derive(Debug, Clone)]
@@ -78,8 +78,6 @@ impl Default for ClmmConfig {
 
 /// Raydium CLMM price stream implementation
 pub struct RaydiumClmmPriceStream {
-    config: ClmmConfig,
-    rpc_client: Arc<RpcClient>,
     pubsub_client: Arc<PubsubClient>,
     shutdown_tx: Option<mpsc::Sender<()>>,
 }
@@ -87,10 +85,10 @@ pub struct RaydiumClmmPriceStream {
 impl RaydiumClmmPriceStream {
     /// Create a new Raydium CLMM price stream
     pub async fn new(config: ClmmConfig) -> Result<Self> {
-        let rpc_client =
+        let _rpc_client =
             Arc::new(RpcClient::new_with_commitment(config.rpc_url.clone(), config.commitment));
         let pubsub_client = Arc::new(PubsubClient::new(&config.ws_url).await?);
-        Ok(Self { config, rpc_client, pubsub_client, shutdown_tx: None })
+        Ok(Self { pubsub_client, shutdown_tx: None })
     }
 
     /// Start the price stream
@@ -132,24 +130,6 @@ impl RaydiumClmmPriceStream {
         }
         Ok(())
     }
-
-    /// Update price for a specific pool
-    async fn update_pool_price(rpc_client: &Arc<RpcClient>, pool_address: &str) -> Result<()> {
-        let pubkey = Pubkey::from_str(pool_address)
-            .context(format!("Invalid pool address: {}", pool_address))?;
-
-        let account =
-            rpc_client.get_account(&pubkey).await.context("Failed to get pool account")?;
-
-        // let pool_state = Self::decode_pool_state(&account.data)?;
-        // let price = Self::calculate_price_from_pool_state(&pool_state)?;
-
-        // Update the global price cache
-        // crate::cache::set_sol_price(price).await;
-
-        // debug!("Updated SOL price: ${:.6} from pool {}", price, pool_address);
-        Ok(())
-    }
 }
 
 /// SOL price cache implementation for Raydium CLMM
@@ -158,17 +138,29 @@ pub struct SolPriceCache {
     price: Arc<RwLock<f64>>,
     message_queue: Option<Arc<MessageQueue>>,
     kv_store: Option<Arc<KvStore>>,
-    clmm_stream: Option<Arc<RaydiumClmmPriceStream>>,
 }
 
 impl SolPriceCache {
     /// Create a new SOL price cache
     pub fn new(kv_store: Option<Arc<KvStore>>, message_queue: Option<Arc<MessageQueue>>) -> Self {
-        Self { price: SOL_PRICE_CACHE.clone(), message_queue, kv_store, clmm_stream: None }
+        Self { price: SOL_PRICE_CACHE.clone(), message_queue, kv_store }
+    }
+
+    pub async fn set_price(&self, price: f64) {
+        *self.price.write().await = price;
+    }
+
+    pub async fn get_price(&self) -> f64 {
+        let current_price = *self.price.read().await;
+        if current_price == 0.0 {
+            unimplemented!()
+        } else {
+            current_price
+        }
     }
 
     /// Start the CLMM price stream
-    pub async fn start_clmm_stream(&mut self) -> Result<()> {
+    pub async fn start_price_stream(&self) -> Result<()> {
         let config = ClmmConfig::default();
         let mut price_stream = RaydiumClmmPriceStream::new(config).await?;
         price_stream.start().await?;
@@ -176,15 +168,6 @@ impl SolPriceCache {
         // Store the stream for later shutdown
         // Note: This is simplified - in practice you'd need to handle the stream lifecycle properly
         info!("Raydium CLMM price stream started");
-        Ok(())
-    }
-
-    /// Stop the CLMM price stream
-    pub async fn stop_clmm_stream(&mut self) -> Result<()> {
-        if let Some(_stream) = self.clmm_stream.take() {
-            // In practice, you'd need to properly handle the stream shutdown
-            info!("Raydium CLMM price stream stopped");
-        }
         Ok(())
     }
 
@@ -257,10 +240,10 @@ impl SolPriceCacheTrait for SolPriceCache {
 
     async fn start_price_stream(&self) -> Result<()> {
         // Start the CLMM stream in a background task
-        let mut cache = SolPriceCache::new(self.kv_store.clone(), self.message_queue.clone());
+        let cache = SolPriceCache::new(self.kv_store.clone(), self.message_queue.clone());
 
         tokio::spawn(async move {
-            if let Err(e) = cache.start_cpmm_stream().await {
+            if let Err(e) = cache.start_price_stream().await {
                 error!("Failed to start CLMM stream: {}", e);
             }
         });

@@ -5,6 +5,7 @@ members = [
 	"crates/ingestor",
 	"crates/scheduler",
 	"crates/sol-price",
+	"crates/streams",
 	"crates/storage/db",
 	"crates/token-metadata",
 ]
@@ -29,6 +30,7 @@ sonar-db = { path = "crates/storage/db" }
 sonar-ingestor = { path = "crates/ingestor" }
 sonar-scheduler = { path = "crates/scheduler" }
 sonar-sol-price = { path = "crates/sol-price" }
+sonar-streams = { path = "crates/streams" }
 sonar-token-metadata = { path = "crates/token-metadata" }
 
 # Error handling
@@ -51,26 +53,27 @@ bb8-redis = { version = "0.24.0" }
 bigdecimal = "0.4.8"
 
 # need yellowstone protos compat
-carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 
 # carbon datasources
-carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
-carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "ab0272e" }
+carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-system-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 
 # Serde
 chrono = { version = "0.4.40", features = ["serde"] }

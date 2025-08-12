@@ -937,7 +937,7 @@ dependencies = [
 [[package]]
 name = "carbon-core"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "borsh 0.10.4",
@@ -966,7 +966,7 @@ dependencies = [
 [[package]]
 name = "carbon-helius-atlas-ws-datasource"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "bincode",
@@ -989,7 +989,7 @@ dependencies = [
 [[package]]
 name = "carbon-log-metrics"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "carbon-core",
@@ -1000,12 +1000,12 @@ dependencies = [
 [[package]]
 name = "carbon-macros"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 
 [[package]]
 name = "carbon-meteora-dlmm-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1018,7 +1018,7 @@ dependencies = [
 [[package]]
 name = "carbon-meteora-pools-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1031,7 +1031,7 @@ dependencies = [
 [[package]]
 name = "carbon-orca-whirlpool-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1044,7 +1044,7 @@ dependencies = [
 [[package]]
 name = "carbon-proc-macros"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "borsh-derive-internal",
  "hex",
@@ -1057,7 +1057,7 @@ dependencies = [
 [[package]]
 name = "carbon-pump-swap-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1069,7 +1069,7 @@ dependencies = [
 [[package]]
 name = "carbon-raydium-amm-v4-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1082,7 +1082,7 @@ dependencies = [
 [[package]]
 name = "carbon-raydium-clmm-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1095,7 +1095,7 @@ dependencies = [
 [[package]]
 name = "carbon-raydium-cpmm-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1108,7 +1108,7 @@ dependencies = [
 [[package]]
 name = "carbon-raydium-launchpad-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1121,7 +1121,7 @@ dependencies = [
 [[package]]
 name = "carbon-rpc-block-crawler-datasource"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1139,7 +1139,7 @@ dependencies = [
 [[package]]
 name = "carbon-rpc-block-subscribe-datasource"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "carbon-core",
@@ -1152,9 +1152,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "carbon-rpc-program-subscribe-datasource"
+version = "0.9.1"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
+dependencies = [
+ "async-trait",
+ "carbon-core",
+ "futures",
+ "log",
+ "solana-account",
+ "solana-client",
+ "solana-pubkey",
+ "tokio",
+ "tokio-util",
+]
+
+[[package]]
 name = "carbon-rpc-transaction-crawler-datasource"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-stream",
  "async-trait",
@@ -1171,9 +1187,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "carbon-system-program-decoder"
+version = "0.9.1"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
+dependencies = [
+ "carbon-core",
+ "serde",
+ "solana-account",
+ "solana-instruction",
+ "solana-program",
+ "solana-pubkey",
+]
+
+[[package]]
 name = "carbon-token-2022-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "carbon-core",
  "serde",
@@ -1186,7 +1215,7 @@ dependencies = [
 [[package]]
 name = "carbon-token-program-decoder"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "carbon-core",
@@ -1195,13 +1224,13 @@ dependencies = [
  "solana-instruction",
  "solana-program-pack",
  "solana-pubkey",
- "spl-token 6.0.0",
+ "spl-token 7.0.0",
 ]
 
 [[package]]
 name = "carbon-yellowstone-grpc-datasource"
 version = "0.9.1"
-source = "git+https://github.com/sola-hq/carbon?rev=ab0272e#ab0272e0c25009ea02a0874d790a326bbb2c5fef"
+source = "git+https://github.com/sola-hq/carbon?rev=854cab7#854cab7f20d2eee63448922fdd3c41c81b67a128"
 dependencies = [
  "async-trait",
  "carbon-core",
@@ -7333,6 +7362,7 @@ dependencies = [
  "sonar-ingestor",
  "sonar-scheduler",
  "sonar-sol-price",
+ "sonar-streams",
  "tokio",
  "tracing",
  "tracing-otel-extra",
@@ -7482,6 +7512,50 @@ dependencies = [
  "tracing",
  "tracing-otel-extra",
  "url",
+]
+
+[[package]]
+name = "sonar-streams"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "async-trait",
+ "axum 0.8.4",
+ "axum-otel",
+ "carbon-core",
+ "carbon-log-metrics",
+ "carbon-rpc-program-subscribe-datasource",
+ "carbon-system-program-decoder",
+ "carbon-token-2022-decoder",
+ "carbon-token-program-decoder",
+ "chrono",
+ "dotenvy",
+ "futures",
+ "futures-util",
+ "reqwest 0.12.22",
+ "serde",
+ "serde_json",
+ "socketioxide",
+ "socketioxide-redis",
+ "solana-account",
+ "solana-account-decoder",
+ "solana-account-decoder-client-types",
+ "solana-client",
+ "solana-commitment-config",
+ "solana-instruction",
+ "solana-pubkey",
+ "solana-signature",
+ "solana-transaction-status",
+ "sonar-db",
+ "spl-token 7.0.0",
+ "strum",
+ "strum_macros",
+ "tokio",
+ "tokio-tungstenite 0.20.1",
+ "tracing",
+ "tracing-otel-extra",
+ "url",
+ "validator",
 ]
 
 [[package]]

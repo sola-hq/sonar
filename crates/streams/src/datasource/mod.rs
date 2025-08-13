@@ -31,14 +31,6 @@ where
 
     info!("Building pipeline with channel buffer size: {}", channel_buffer_size);
 
-    // let metrics = Arc::new(NodeMetrics::new());
-    // let token_swap_handler = Arc::new(TokenSwapHandler::new(
-    //     kv_store.clone(),
-    //     message_queue.clone(),
-    //     db.clone(),
-    //     metrics,
-    // ));
-
     let mut builder = Pipeline::builder();
     for ds in datasources.into_iter() {
         builder = builder.datasource(ds);

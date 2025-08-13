@@ -1,4 +1,4 @@
-use crate::ws::event::{RequestEvent, TokenHolderEvent};
+use crate::ws::event::{LpEvent, RequestEvent, TokenHolderEvent};
 use socketioxide::{adapter::Adapter, BroadcastError, SocketIo};
 use std::sync::Arc;
 
@@ -27,6 +27,11 @@ impl<A: Adapter> IoProxy<A> {
         data: &TokenHolderEvent,
     ) -> Result<(), BroadcastError> {
         self.io.emit(RequestEvent::TokenHolder.to_string(), data).await?;
+        Ok(())
+    }
+
+    pub async fn broadcast_lp(&self, data: &LpEvent) -> Result<(), BroadcastError> {
+        self.io.emit(RequestEvent::Lp.to_string(), data).await?;
         Ok(())
     }
 }

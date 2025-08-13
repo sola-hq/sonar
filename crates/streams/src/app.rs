@@ -1,19 +1,13 @@
 use crate::{
-    datasource::{
-        account::{
-            make_system_account_subscribe_datasource, make_token_2022_account_subscribe_datasource,
-            make_token_account_subscribe_datasource,
-        },
-        build_pipeline,
-    },
+    datasource::build_pipeline,
     handlers::health,
     shutdown::shutdown_signal_with_handler,
     ws::{on_connect, IoProxy},
 };
 use anyhow::{Context, Result};
 use axum::{routing::get, Router};
-use carbon_core::pipeline::Pipeline;
-use socketioxide::{adapter::Adapter, SocketIo};
+use carbon_core::datasource::Datasource;
+use socketioxide::SocketIo;
 use std::sync::Arc;
 use std::{net::SocketAddr, str::FromStr};
 use tokio::net::TcpListener;
@@ -36,17 +30,10 @@ impl App {
         Ok(port)
     }
 
-    fn get_pipeline(&self, io_proxy: Arc<IoProxy<impl Adapter>>) -> Result<Pipeline> {
-        let datasources = vec![
-            make_token_account_subscribe_datasource(),
-            make_token_2022_account_subscribe_datasource(),
-            make_system_account_subscribe_datasource(),
-        ];
-
-        build_pipeline(datasources, io_proxy).context("Failed to build pipeline")
-    }
-
-    pub async fn run(&self) -> Result<()> {
+    pub async fn run<DS>(&self, datasources: Vec<DS>) -> Result<()>
+    where
+        DS: Datasource + Send + Sync + 'static,
+    {
         let port = self.get_port()?;
         let addr = format!("0.0.0.0:{port}");
 
@@ -56,7 +43,7 @@ impl App {
         let io_proxy = IoProxy::new(Arc::new(io), None);
         let app = Router::new().layer(layer).route("/health", get(health::get_health));
 
-        let mut pipeline = self.get_pipeline(Arc::new(io_proxy))?;
+        let mut pipeline = build_pipeline(datasources, Arc::new(io_proxy))?;
 
         // Spawn pipeline in background
         tokio::spawn(async move {

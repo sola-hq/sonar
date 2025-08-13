@@ -28,6 +28,7 @@ carbon-system-program-decoder = { workspace = true }
 
 # datasource
 carbon-rpc-program-subscribe-datasource = { workspace = true }
+carbon-yellowstone-grpc-datasource = { workspace = true }
 
 # solana
 solana-account = { workspace = true }
@@ -62,6 +63,7 @@ chrono = { workspace = true }
 # url
 reqwest = { workspace = true, features = ["json"] }
 url = { workspace = true }
+yellowstone-grpc-proto = { workspace = true }
 
 # strum
 strum_macros = { workspace = true }

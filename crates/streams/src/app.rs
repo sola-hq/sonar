@@ -37,13 +37,13 @@ impl App {
     }
 
     fn get_pipeline(&self, io_proxy: Arc<IoProxy<impl Adapter>>) -> Result<Pipeline> {
-        let datasource = vec![
+        let datasources = vec![
             make_token_account_subscribe_datasource(),
             make_token_2022_account_subscribe_datasource(),
             make_system_account_subscribe_datasource(),
         ];
 
-        build_pipeline(datasource, io_proxy).context("Failed to build pipeline")
+        build_pipeline(datasources, io_proxy).context("Failed to build pipeline")
     }
 
     pub async fn run(&self) -> Result<()> {

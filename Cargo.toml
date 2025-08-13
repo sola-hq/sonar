@@ -91,34 +91,34 @@ solana-transaction-status = "2.2"
 
 # SPL Token
 spl-token = { version = "7.0.0" }
-spl-token-2022 = { version = "7.0.0" }
-spl-token-metadata-interface = { version = "0.6.0" }
+spl-token-2022 = { version = "8.0.0" }
+spl-token-metadata-interface = { version = "0.7.0" }
 mpl-token-metadata = { version = "5.1.0" }
 
 # Core carbon
-carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
 
 # Carbon datasources
-carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
 
 # Carbon decoders
-carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-system-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
+carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-system-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
 
 # Helius (Solana RPC provider) & Yellowstone gRPC
 helius = { version = "0.2.6", git = "https://github.com/helius-labs/helius-rust-sdk.git", rev = "a1316c5" }

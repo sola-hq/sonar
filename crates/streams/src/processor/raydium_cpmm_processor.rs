@@ -1,4 +1,4 @@
-use crate::ws::{event::LpEvent, IoProxy};
+use crate::ws::IoProxy;
 use carbon_core::{
     account::AccountProcessorInputType, error::CarbonResult, metrics::MetricsCollection,
     processor::Processor,
@@ -29,13 +29,14 @@ impl<A: Adapter> Processor for RaydiumCpmmAccountProcessor<A> {
         let (meta, account, _solana_account) = data;
 
         if let RaydiumCpmmAccount::PoolState(pool_state) = account.data {
-            let data = LpEvent::from_raydium_cpmm(&meta, &pool_state);
-            let io = self.io.clone();
-            tokio::spawn(async move {
-                if let Err(e) = io.broadcast_lp(&data).await {
-                    tracing::warn!("Failed to broadcast lp: {}", e);
-                }
-            });
+            if let Ok(value) = serde_json::to_value(pool_state) {
+                let io = self.io.clone();
+                tokio::spawn(async move {
+                    if let Err(e) = io.broadcast_account_change(&account.owner, meta, value).await {
+                        tracing::warn!("Failed to broadcast Raydium CPMM pool state update: {}", e);
+                    }
+                });
+            }
             return Ok(());
         }
         Ok(())

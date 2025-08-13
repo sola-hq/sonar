@@ -206,15 +206,15 @@ pub fn make_pump_swap_account_subscribe_datasource() -> RpcProgramSubscribe {
 /// * `rpc_ws_url` - The URL of the RPC websocket
 pub fn make_ws_datasource() -> Vec<RpcProgramSubscribe> {
     vec![
-        make_token_account_subscribe_datasource(),
-        make_token_2022_account_subscribe_datasource(),
-        make_system_account_subscribe_datasource(),
+        // make_token_account_subscribe_datasource(),
+        // make_token_2022_account_subscribe_datasource(),
+        // make_system_account_subscribe_datasource(),
         make_raydium_amm_v4_account_subscribe_datasource(),
-        make_raydium_clmm_account_subscribe_datasource(),
-        make_raydium_cpmm_account_subscribe_datasource(),
-        make_meteora_dlmm_account_subscribe_datasource(),
-        make_meteora_pools_account_subscribe_datasource(),
-        make_meteora_damm_v2_account_subscribe_datasource(),
-        make_pump_swap_account_subscribe_datasource(),
+        // make_raydium_clmm_account_subscribe_datasource(),
+        // make_raydium_cpmm_account_subscribe_datasource(),
+        // make_meteora_dlmm_account_subscribe_datasource(),
+        // make_meteora_pools_account_subscribe_datasource(),
+        // make_meteora_damm_v2_account_subscribe_datasource(),
+        // make_pump_swap_account_subscribe_datasource(),
     ]
 }

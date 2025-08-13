@@ -12,6 +12,8 @@ use spl_token::state::Account as TokenAccount;
 
 #[derive(Debug, Eq, PartialEq, strum_macros::Display)]
 pub enum RequestEvent {
+    #[strum(to_string = "account_change")]
+    AccountChange,
     #[strum(to_string = "token_holder")]
     TokenHolder,
     #[strum(to_string = "lp")]

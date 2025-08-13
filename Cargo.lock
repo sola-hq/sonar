@@ -7560,6 +7560,7 @@ dependencies = [
  "solana-client",
  "solana-commitment-config",
  "solana-instruction",
+ "solana-program",
  "solana-pubkey",
  "solana-signature",
  "solana-transaction-status",

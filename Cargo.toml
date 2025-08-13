@@ -97,10 +97,10 @@ mpl-token-metadata = { version = "5.1.0" }
 
 # Core carbon
 carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
-carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 
 # Carbon datasources
+carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }
 carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "854cab7" }

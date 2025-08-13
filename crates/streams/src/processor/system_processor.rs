@@ -1,4 +1,4 @@
-use crate::ws::{event::TokenHolderEvent, IoProxy};
+use crate::ws::IoProxy;
 use carbon_core::{
     account::AccountProcessorInputType, error::CarbonResult, metrics::MetricsCollection,
     processor::Processor,

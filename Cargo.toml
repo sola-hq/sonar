@@ -43,38 +43,70 @@ async-trait = { version = "0.1.88" }
 futures = { version = "0.3" }
 futures-util = { version = "0.3.30" }
 
+# Axum web framework
+axum = { version = "0.8.4", features = ["ws"] }
+axum-otel = { version = "0.30.10" }
+
+# Redis
+bb8-redis = { version = "0.24.0" }
+redis = { version = "0.32.5", features = ["tokio-comp", "aio"] }
+
+# Mathematical
+bigdecimal = "0.4.8"
+
+# Core carbon
+carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+
+# Carbon datasources
+carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+
+# Carbon decoders
+carbon-meteora-damm-v2-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-system-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
+
+# Date & time
+chrono = { version = "0.4.40", features = ["serde"] }
+
+# CLI argument parsing
+clap = { version = "4.5.37", features = ["derive", "env"] }
+
+# Database & Storage
+clickhouse = { version = "0.13.3", features = ["native-tls", "inserter"] }
+
+# Configuration & environment
+dotenvy = { version = "0.15.7" }
+
+# Helius (Solana RPC provider) & Yellowstone gRPC
+helius = { version = "0.2.6", git = "https://github.com/helius-labs/helius-rust-sdk.git", rev = "a1316c5" }
+mpl-token-metadata = { version = "5.1.0" }
+
+# HTTP client
+reqwest = { version = "0.12.23", features = ["json"] }
+
 # Serde (serialization)
 serde = { version = "1.0.152", features = ["derive"] }
 serde_json = "1.0.25"
 serde_with = { version = "3.13.0", features = ["chrono"] }
 
-# Axum web framework
-axum = { version = "0.8.4", features = ["ws"] }
-axum-otel = { version = "0.30.10" }
-
-# Tower middleware
-tower = "0.5.2"
-tower-http = { version = "0.6.4", features = [
-	"trace",
-	"cors",
-	"request-id",
-	"catch-panic",
-	"timeout",
-	"add-extension",
-	"cors",
-	"set-header",
-	"compression-full",
-] }
-
-# HTTP client
-reqwest = { version = "0.12.23", features = ["json"] }
-
-# Database & Storage
-clickhouse = { version = "0.13.3", features = ["native-tls", "inserter"] }
-
-# Redis
-bb8-redis = { version = "0.24.0" }
-redis = { version = "0.32.5", features = ["tokio-comp", "aio"] }
+# WebSocket
+socketioxide = { version = "0.17.2", features = ["state"] }
+socketioxide-redis = { version = "0.2.2" }
 
 # Solana ecosystem
 solana-account = "2.2"
@@ -93,72 +125,37 @@ solana-transaction-status = "2.2"
 spl-token = { version = "7.0.0" }
 spl-token-2022 = { version = "8.0.0" }
 spl-token-metadata-interface = { version = "0.7.0" }
-mpl-token-metadata = { version = "5.1.0" }
-
-# Core carbon
-carbon-core = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-log-metrics = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-
-# Carbon datasources
-carbon-helius-atlas-ws-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-rpc-block-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-rpc-block-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-rpc-program-subscribe-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-rpc-transaction-crawler-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-yellowstone-grpc-datasource = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-
-# Carbon decoders
-carbon-meteora-dlmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-meteora-pools-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-orca-whirlpool-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-pump-swap-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-raydium-amm-v4-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-raydium-clmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-raydium-cpmm-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-raydium-launchpad-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-system-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-token-2022-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-carbon-token-program-decoder = { git = "https://github.com/sola-hq/carbon", rev = "c011890" }
-
-# Helius (Solana RPC provider) & Yellowstone gRPC
-helius = { version = "0.2.6", git = "https://github.com/helius-labs/helius-rust-sdk.git", rev = "a1316c5" }
-yellowstone-grpc-proto = { version = "6.0.0" }
-
-# CLI argument parsing
-clap = { version = "4.5.37", features = ["derive", "env"] }
-
-# Configuration & environment
-dotenvy = { version = "0.15.7" }
-
-# Date & time
-chrono = { version = "0.4.40", features = ["serde"] }
-
-# Mathematical
-bigdecimal = "0.4.8"
 
 # Enum utilities
 strum = { version = "0.27", features = ["derive"] }
 strum_macros = { version = "0.27" }
 
-# Validation
-validator = { version = "0.20.0", features = ["derive"] }
-
-# URL handling
-url = "2.5.4"
-
 # Tokio runtime
 tokio = { version = "1.44.2", features = ["full"] }
-tokio-tungstenite = { version = "0.20.1", features = ["native-tls"] }
 tokio-cron-scheduler = { version = "0.14.0", features = ["signal"] }
+tokio-tungstenite = { version = "0.20.1", features = ["native-tls"] }
 
-# WebSocket
-socketioxide = { version = "0.17.2", features = ["state"] }
-socketioxide-redis = { version = "0.2.2" }
+# Tower middleware
+tower = "0.5.2"
+tower-http = { version = "0.6.4", features = [
+	"trace",
+	"cors",
+	"request-id",
+	"catch-panic",
+	"timeout",
+	"add-extension",
+	"cors",
+	"set-header",
+	"compression-full",
+] }
 
 # Tracing & logging
 tracing = { version = "0.1.41" }
 tracing-error = { version = "0.2.0" }
 tracing-otel-extra = { version = "0.30.10", features = ["logger", "env"] }
+url = "2.5.4"
+validator = { version = "0.20.0", features = ["derive"] }
+yellowstone-grpc-proto = { version = "6.0.0" }
 
 # Curve25519 cryptography
 [workspace.dependencies.curve25519-dalek]

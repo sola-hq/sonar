@@ -1,4 +1,4 @@
-pub use crate::ws::{event::RequestEvent, token::on_token_trade};
+pub use crate::ws::event::RequestEvent;
 use socketioxide::{adapter::Adapter, extract::SocketRef};
 use tracing::{info, warn};
 

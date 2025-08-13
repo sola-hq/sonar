@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use sonar_streams::app::App;
+use sonar_streams::{app::App, datasource::make_ws_datasource};
 use std::env;
 use tracing::info;
 use tracing_otel_extra::init_logging;
@@ -13,8 +13,9 @@ async fn main() -> Result<()> {
 
     info!("Starting Streams service...");
 
+    let datasources = make_ws_datasource();
     let app = App::new();
-    app.run().await.context("Failed to run app")?;
+    app.run(datasources).await.context("Failed to run app")?;
 
     info!("Pipeline completed successfully");
     Ok(())

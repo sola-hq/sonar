@@ -1003,6 +1003,19 @@ version = "0.9.1"
 source = "git+https://github.com/sola-hq/carbon?rev=c011890#c011890610db74772746695da9ea450bfc6d3269"
 
 [[package]]
+name = "carbon-meteora-damm-v2-decoder"
+version = "0.9.1"
+source = "git+https://github.com/sola-hq/carbon?rev=c011890#c011890610db74772746695da9ea450bfc6d3269"
+dependencies = [
+ "carbon-core",
+ "serde",
+ "serde-big-array",
+ "solana-account",
+ "solana-instruction",
+ "solana-pubkey",
+]
+
+[[package]]
 name = "carbon-meteora-dlmm-decoder"
 version = "0.9.1"
 source = "git+https://github.com/sola-hq/carbon?rev=c011890#c011890610db74772746695da9ea450bfc6d3269"
@@ -7520,6 +7533,13 @@ dependencies = [
  "axum 0.8.4",
  "carbon-core",
  "carbon-log-metrics",
+ "carbon-meteora-damm-v2-decoder",
+ "carbon-meteora-dlmm-decoder",
+ "carbon-meteora-pools-decoder",
+ "carbon-pump-swap-decoder",
+ "carbon-raydium-amm-v4-decoder",
+ "carbon-raydium-clmm-decoder",
+ "carbon-raydium-cpmm-decoder",
  "carbon-rpc-program-subscribe-datasource",
  "carbon-system-program-decoder",
  "carbon-token-2022-decoder",

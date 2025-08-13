@@ -97,7 +97,7 @@ graph TD
 First, clone the repository:
 
 ```bash
-git clone https://github.com/phcxc/sonar.git
+git clone https://github.com/iamnivekx/sonar.git
 cd sonar
 ```
 

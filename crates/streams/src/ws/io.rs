@@ -1,4 +1,6 @@
 use crate::ws::event::{LpEvent, RequestEvent, TokenHolderEvent};
+use carbon_core::account::AccountMetadata;
+use serde_json::{json, Value};
 use socketioxide::{adapter::Adapter, BroadcastError, SocketIo};
 use std::sync::Arc;
 
@@ -20,6 +22,22 @@ impl<A: Adapter> IoProxy<A> {
     pub fn with_channel_buffer_size(&mut self, channel_buffer_size: usize) -> &mut Self {
         self.channel_buffer_size = channel_buffer_size;
         self
+    }
+
+    pub async fn broadcast_account_change(
+        &self,
+        owner: &solana_pubkey::Pubkey,
+        meta: AccountMetadata,
+        data: Value,
+    ) -> Result<(), BroadcastError> {
+        let data = json!({
+            "owner": owner.to_string(),
+            "pubkey": meta.pubkey.to_string(),
+            "data": data
+        });
+
+        self.io.to(owner.to_string()).emit(RequestEvent::AccountChange.to_string(), &data).await?;
+        Ok(())
     }
 
     pub async fn broadcast_token_holder(

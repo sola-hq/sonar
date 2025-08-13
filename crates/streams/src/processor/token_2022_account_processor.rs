@@ -1,4 +1,4 @@
-use crate::ws::{event::TokenHolderEvent, IoProxy};
+use crate::ws::IoProxy;
 use carbon_core::{
     account::AccountProcessorInputType, error::CarbonResult, metrics::MetricsCollection,
     processor::Processor,
@@ -26,16 +26,19 @@ impl<A: Adapter> Processor for Token2022AccountProcessor<A> {
         data: Self::InputType,
         _metrics: Arc<MetricsCollection>,
     ) -> CarbonResult<()> {
-        let (meta, account, _solana_account) = data;
+        let (meta, account, solana_account) = data;
 
         if let Token2022Account::Token(account) = account.data {
-            let data = TokenHolderEvent::from_token_2022_account(meta, account);
-            let io = self.io.clone();
-            tokio::spawn(async move {
-                if let Err(e) = io.broadcast_token_holder(&data).await {
-                    tracing::warn!("Failed to broadcast token holder: {}", e);
-                }
-            });
+            if let Ok(value) = serde_json::to_value(account) {
+                let io = self.io.clone();
+                tokio::spawn(async move {
+                    if let Err(e) =
+                        io.broadcast_account_change(&solana_account.owner, meta, value).await
+                    {
+                        tracing::warn!("Failed to broadcast token 2022 account: {}", e);
+                    }
+                });
+            }
         }
         Ok(())
     }

@@ -1,5 +1,5 @@
 use crate::ws::event::{RequestEvent, TokenHolderEvent};
-use socketioxide::{adapter::Adapter, SocketIo};
+use socketioxide::{adapter::Adapter, BroadcastError, SocketIo};
 use std::sync::Arc;
 
 pub const CHANNEL_BUFFER_SIZE: usize = 4 * 1000; // 4k
@@ -22,10 +22,11 @@ impl<A: Adapter> IoProxy<A> {
         self
     }
 
-    pub async fn broadcast_token_holder(&self, data: &TokenHolderEvent) {
-        self.io
-            .emit(RequestEvent::TokenHolder.to_string(), data)
-            .await
-            .expect("Failed to emit token_holder broadcast");
+    pub async fn broadcast_token_holder(
+        &self,
+        data: &TokenHolderEvent,
+    ) -> Result<(), BroadcastError> {
+        self.io.emit(RequestEvent::TokenHolder.to_string(), data).await?;
+        Ok(())
     }
 }

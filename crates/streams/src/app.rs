@@ -17,14 +17,14 @@ use socketioxide::{adapter::Adapter, SocketIo};
 use std::sync::Arc;
 use std::{net::SocketAddr, str::FromStr};
 use tokio::net::TcpListener;
-use tracing::info;
+use tracing::{error, info};
 
 #[derive(Clone, Default)]
 pub struct App;
 
 impl App {
     pub fn new() -> Self {
-        Self::default()
+        Self
     }
 
     pub fn get_port(&self) -> u16 {
@@ -51,7 +51,7 @@ impl App {
         //     SocketIo::builder().with_adapter::<RedisAdapter<_>>(adapter_ctor).build_layer();
         let (layer, io) = SocketIo::new_layer();
 
-        let _ = io.ns("/", on_connect);
+        io.ns("/", on_connect);
 
         let io_proxy = IoProxy::new(Arc::new(io), None);
 
@@ -60,7 +60,9 @@ impl App {
         let mut pipeline = self.get_pipeline(Arc::new(io_proxy))?;
 
         tokio::spawn(async move {
-            let _ = pipeline.run().await.expect("Failed to run pipeline");
+            if let Err(e) = pipeline.run().await {
+                error!("Failed to run pipeline: {e}");
+            }
         });
 
         self.start_http_server(app, &format!("0.0.0.0:{}", self.get_port())).await?;
@@ -70,9 +72,11 @@ impl App {
 
     async fn start_http_server(&self, app: Router, addr: &str) -> Result<()> {
         let socket_addr =
-            SocketAddr::from_str(addr).expect(&format!("Failed to socket address {addr}"));
+            SocketAddr::from_str(addr).context(format!("Failed to socket address {addr}"))?;
 
-        let listener = TcpListener::bind(socket_addr).await?;
+        let listener = TcpListener::bind(socket_addr)
+            .await
+            .context(format!("Failed to bind to address {addr}"))?;
 
         tracing::info!("Starting HTTP server on {}", addr);
         axum::serve(listener, app)

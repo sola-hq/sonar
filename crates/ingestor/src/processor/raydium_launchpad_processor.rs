@@ -121,7 +121,7 @@ impl Processor for RaydiumLaunchpadInstructionProcessor {
 }
 
 #[cfg(test)]
-mod cpmm_tests {
+mod launchpad_tests {
     use super::*;
     use crate::{
         handler::token_swap_handler::filter_swap_transfers,

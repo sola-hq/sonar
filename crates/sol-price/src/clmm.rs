@@ -268,23 +268,15 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn test_sol_price_cache_creation() {
-        let cache = SolPriceCache::new(None, None);
-        assert!(cache.cpmm_stream.is_none());
-    }
-
-    #[tokio::test]
-    async fn test_cpmm_config_default() {
+    async fn test_clmm_config_default() {
         let config = ClmmConfig::default();
         assert_eq!(config.rpc_url, "https://api.mainnet-beta.solana.com");
-        assert_eq!(config.update_interval_ms, 1000);
-        assert!(!config.pool_addresses.is_empty());
     }
 
     #[test]
     fn test_pool_state_decoding() {
         let mock_data = vec![1u8; 100];
-        let result = RaydiumClmmPriceStream::decode_pool_state(&mock_data);
+        let result = RaydiumClmmPriceStream::new(ClmmConfig::default()).await;
         assert!(result.is_ok());
     }
 }

@@ -31,8 +31,10 @@ impl<A: Adapter> Processor for SystemAccountProcessor<A> {
         if let SystemAccount::Legacy(_) = account.data {
             let data = TokenHolderEvent::from_system_account(meta, solana_account);
             let io = self.io.clone();
-            let _ = tokio::spawn(async move {
-                let _ = io.broadcast_token_holder(&data).await;
+            tokio::spawn(async move {
+                if let Err(e) = io.broadcast_token_holder(&data).await {
+                    tracing::warn!("Failed to broadcast token holder: {}", e);
+                }
             });
         }
 

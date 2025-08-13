@@ -20,7 +20,6 @@ anyhow = { workspace = true }
 
 # dotenv
 dotenvy = { workspace = true }
-bigdecimal = { workspace = true }
 
 # async crates
 async-trait = { workspace = true }
@@ -44,17 +43,11 @@ url = { workspace = true }
 
 # Solana dependencies
 solana-account = { workspace = true }
-solana-client = { workspace = true }
 solana-pubkey = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-account-decoder-client-types = { workspace = true }
-
-# Raydium CPMM decoder
-carbon-core = { workspace = true }
-carbon-raydium-clmm-decoder = { workspace = true }
 
 [dev-dependencies]
 tracing-otel-extra = { workspace = true }
 
 [features]
+default = ["binance"]
 binance = []

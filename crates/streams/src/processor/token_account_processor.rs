@@ -31,8 +31,10 @@ impl<A: Adapter> Processor for TokenAccountProcessor<A> {
         if let TokenProgramAccount::Account(account) = decoded.data {
             let data = TokenHolderEvent::from_token_account(meta, account);
             let io = self.io.clone();
-            let _ = tokio::spawn(async move {
-                let _ = io.broadcast_token_holder(&data).await;
+            tokio::spawn(async move {
+                if let Err(e) = io.broadcast_token_holder(&data).await {
+                    tracing::warn!("Failed to broadcast token holder: {}", e);
+                }
             });
         }
         Ok(())

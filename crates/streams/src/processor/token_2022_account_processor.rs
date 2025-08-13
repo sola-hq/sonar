@@ -30,10 +30,11 @@ impl<A: Adapter> Processor for Token2022AccountProcessor<A> {
 
         if let Token2022Account::Token(account) = account.data {
             let data = TokenHolderEvent::from_token_2022_account(meta, account);
-
             let io = self.io.clone();
-            let _ = tokio::spawn(async move {
-                let _ = io.broadcast_token_holder(&data).await;
+            tokio::spawn(async move {
+                if let Err(e) = io.broadcast_token_holder(&data).await {
+                    tracing::warn!("Failed to broadcast token holder: {}", e);
+                }
             });
         }
         Ok(())

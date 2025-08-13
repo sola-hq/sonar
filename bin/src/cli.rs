@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand};
 use dotenvy::dotenv;
 use tracing_otel_extra::Logger;
 
-use crate::commands::{api, node, scheduler};
+use crate::commands::{api, node, scheduler, streams};
 
 #[derive(Parser)]
 #[clap(version, about, propagate_version = true)]
@@ -29,6 +29,8 @@ pub enum Commands {
     Node(node::Command),
     #[command(name = "scheduler", about = "Start the Scheduler server")]
     Scheduler(scheduler::Command),
+    #[command(name = "streams", about = "Start the Streams server")]
+    Streams(streams::Command),
 }
 
 /// Parse CLI options, set up logging and run the chosen command.
@@ -40,6 +42,7 @@ pub async fn run() -> anyhow::Result<()> {
         Commands::Api(command) => command.execute().await?,
         Commands::Node(command) => command.execute().await?,
         Commands::Scheduler(command) => command.execute().await?,
+        Commands::Streams(command) => command.execute().await?,
     }
     drop(guard);
     Ok(())

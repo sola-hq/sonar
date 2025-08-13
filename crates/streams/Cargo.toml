@@ -1,0 +1,74 @@
+[package]
+name = "sonar-streams"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+
+[dependencies]
+
+# tracing + otel
+tracing = { workspace = true }
+tracing-otel-extra = { workspace = true }
+
+# errors crates
+anyhow = { workspace = true }
+
+# dotenv
+dotenvy = { workspace = true }
+
+# carbon crates
+carbon-core = { workspace = true }
+carbon-log-metrics = { workspace = true }
+carbon-token-program-decoder = { workspace = true }
+carbon-token-2022-decoder = { workspace = true }
+carbon-system-program-decoder = { workspace = true }
+
+# datasource
+carbon-rpc-program-subscribe-datasource = { workspace = true }
+
+# solana
+solana-account = { workspace = true }
+solana-account-decoder = { workspace = true }
+solana-client = { workspace = true }
+solana-pubkey = { workspace = true }
+solana-signature = { workspace = true }
+solana-transaction-status = { workspace = true }
+solana-commitment-config = { workspace = true }
+solana-instruction = { workspace = true }
+solana-account-decoder-client-types = { workspace = true }
+
+# spl token
+spl-token = { workspace = true }
+
+# async crates
+async-trait = { workspace = true }
+futures = { workspace = true }
+futures-util = { workspace = true }
+
+# tokio
+tokio = { workspace = true, features = ["rt", "macros", "signal"] }
+tokio-tungstenite = { workspace = true, features = ["native-tls"] }
+
+# serde
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+
+# chrono
+chrono = { workspace = true }
+
+# url
+reqwest = { workspace = true, features = ["json"] }
+url = { workspace = true }
+
+# strum
+strum_macros = { workspace = true }
+
+# axum
+axum = { workspace = true }
+
+# socketioxide
+socketioxide = { workspace = true }
+socketioxide-redis = { workspace = true }

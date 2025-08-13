@@ -14,6 +14,7 @@ sonar-api = { workspace = true }
 sonar-ingestor = { workspace = true, optional = true }
 sonar-sol-price = { workspace = true, optional = true }
 sonar-scheduler = { workspace = true }
+sonar-streams = { workspace = true }
 
 tracing = { workspace = true }
 tracing-otel-extra = { workspace = true, features = ["env"] }

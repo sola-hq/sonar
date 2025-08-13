@@ -4,3 +4,5 @@ pub const SOLANNA: &str = "solana";
 pub const WSOL_MINT_KEY_STR: &str = "So11111111111111111111111111111111111111112";
 /// The program id of the cpmm program
 pub const CPMM_PROGRAM_ID: &str = "8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj";
+/// The program id of the cpmm program
+pub const MARKET_PROGRAM_ID: &str = "8sLbNZoA1cfnvMJLPfp98ZLAnFSYCFApfJKMbiXNLwxj";

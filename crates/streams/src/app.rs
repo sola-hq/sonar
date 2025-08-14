@@ -37,7 +37,11 @@ impl App {
         let port = self.get_port()?;
         let addr = format!("0.0.0.0:{port}");
 
-        let (layer, io) = SocketIo::new_layer();
+        let (layer, io) = SocketIo::builder()
+            .max_payload(1024 * 1024 * 10) // 10MB max payload
+            .max_buffer_size(128 * 10) // Increase from default 128 to 1280 packets
+            .ws_read_buffer_size(64 * 1024) // Increase from default 4KB to 64KB
+            .build_layer();
         io.ns("/", on_connect);
 
         let io_proxy = IoProxy::new(Arc::new(io), None);

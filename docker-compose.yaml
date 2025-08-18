@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: sonar_redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - sonar_network
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24.3
+    container_name: sonar_clickhouse
+    ports:
+      - '8123:8123' # HTTP interface
+      - '9000:9000' # Native client interface
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse # Persistent data
+      - clickhouse_logs:/var/log/clickhouse-server # Logs
+      # You might want to mount custom config if needed:
+      # - ./clickhouse/config.xml:/etc/clickhouse-server/config.xml
+      # - ./clickhouse/users.xml:/etc/clickhouse-server/users.xml
+    healthcheck:
+      test: ['CMD', 'curl', '--fail', 'http://localhost:8123/']
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - sonar_network
+
+  # --- Sonar Application Services ---
+  node:
+    image: ghcr.io/sola-hq/sonar:latest
+    container_name: sonar_ingestor
+    command: node geyser
+    env_file:
+      - .env
+    volumes:
+      - .env:/app/.env # Mount .env for consistency
+    depends_on:
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    networks:
+      - sonar_network
+
+  api:
+    image: ghcr.io/sola-hq/sonar:latest
+    container_name: sonar_api
+    command: api
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+    env_file:
+      - .env
+    volumes:
+      - .env:/app/.env # Mount .env for consistency
+    ports:
+      - '8000:8000'
+    depends_on:
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    networks:
+      - sonar_network
+
+  scheduler:
+    image: ghcr.io/sola-hq/sonar:latest
+    container_name: sonar_scheduler
+    command: scheduler candlestick
+    env_file:
+      - .env
+    volumes:
+      - .env:/app/.env # Mount .env for consistency
+    depends_on:
+      redis:
+        condition: service_healthy
+      clickhouse:
+        condition: service_healthy
+    networks:
+      - sonar_network
+
+volumes:
+  redis_data:
+  clickhouse_data:
+  clickhouse_logs:
+
+networks:
+  sonar_network:
+    driver: bridge

@@ -1,14 +1,14 @@
 # Sonar
 
 <p align="center">
-  <a href="https://github.com/sola-hq/sonar/actions/workflows/lint.yml">
-    <img src="https://github.com/sola-hq/sonar/actions/workflows/lint.yml/badge.svg" alt="Lint Status">
+  <a href="https://github.com/sola-hq/sonar-rs/actions/workflows/lint.yml">
+    <img src="https://github.com/sola-hq/sonar-rs/actions/workflows/lint.yml/badge.svg" alt="Lint Status">
   </a>
-  <a href="https://github.com/sola-hq/sonar/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/sola-hq/sonar" alt="License">
+  <a href="https://github.com/sola-hq/sonar-rs/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/sola-hq/sonar-rs" alt="License">
   </a>
-  <a href="https://github.com/sola-hq/sonar">
-    <img src="https://img.shields.io/github/stars/sola-hq/sonar?style=social" alt="GitHub Stars">
+  <a href="https://github.com/sola-hq/sonar-rs">
+    <img src="https://img.shields.io/github/stars/sola-hq/sonar-rs?style=social" alt="GitHub Stars">
   </a>
 </p>
 
@@ -22,7 +22,7 @@ Sonar is a modular indexing and analytics platform for the Solana blockchain. It
 
 ## 🤔 Why Sonar?
 
-Accessing reliable, low-latency, and comprehensive DeFi data on Solana is complex and expensive. Sonar solves this by providing a self-hosted, open-source solution that is both powerful and flexible.
+Accessing reliable, low-latency, and comprehensive DeFi data on Solana is complex and expensive. Sonar solves this by providing a self-hostable, open-source solution that is both powerful and flexible.
 
 **Who is this for?**
 
@@ -41,10 +41,12 @@ Accessing reliable, low-latency, and comprehensive DeFi data on Solana is comple
 
 ## 🚀 Getting Started
 
+Sonar is designed for easy setup. Follow these steps to get your local development environment running.
+
 ### Prerequisites
 
 - **Rust**: See [rust-toolchain.toml](./rust-toolchain.toml) for the exact version.
-- **Docker**: For running dependent services like Redis and ClickHouse.
+- **Docker & Docker Compose**: For running all services (Sonar components, Redis, ClickHouse).
 - **Access to Solana Data**:
     - For full, low-latency performance: A Solana node with the [Geyser plugin](https://solana.com/docs/rpc/geyser-plugins).
     - For basic functionality and development: A standard Solana RPC endpoint.
@@ -52,47 +54,61 @@ Accessing reliable, low-latency, and comprehensive DeFi data on Solana is comple
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/sola-hq/sonar.git
-cd sonar
+git clone https://github.com/sola-hq/sonar-rs.git
+cd sonar-rs
 ```
 
 ### 2. Configure Your Environment
 
-Copy the example environment file. You will need to fill in the required values, especially the database and RPC endpoint URLs.
+Copy the example environment file and fill in the required values. **Crucially, ensure your `.env` file contains correct connection strings for Redis and ClickHouse, as these are now managed by Docker Compose.**
 
 ```bash
 cp .env.example .env
+# Example .env entries for Docker Compose:
+# REDIS_URL=redis://redis:6379/
+# DATABASE_URL=clickhouse://default:@clickhouse:8123/default
 ```
 
-### 3. Run with Docker Compose (Recommended)
+### 3. Run All Services with Docker Compose (Recommended)
 
-For a simple, one-command setup of all services (including Redis and ClickHouse), we recommend using Docker Compose.
+This is the easiest way to get all Sonar components and their dependencies (Redis, ClickHouse) running locally.
 
-*(Note: A `docker-compose.yml` file is being developed and will be available soon. For now, please run the services manually as described below.)*
+```bash
+docker-compose up --build # --build will build the sonar images if not present
+```
 
-### 4. Manual Build & Run
+Once started, you can access the API at `http://localhost:8000/swagger-ui` (or your configured API port).
+
+### Manual Build & Run (Advanced)
+
+If you prefer to run services outside of Docker Compose, you can build and run them manually.
 
 Build the project in release mode:
 
 ```bash
-cargo build --release
+cargo build --release sonar
 ```
 
-Each service can be run using the main `sonar` binary. You will need to run each command in a separate terminal.
+Each service can be run using the main `sonar` binary in a separate terminal. Ensure your Redis and ClickHouse instances are running and accessible.
 
 **Start the API Server:**
 ```bash
 ./target/release/sonar api
+# or
+cargo run -p sonar-api
 ```
 
 **Start the Ingestor (Node):**
 ```bash
-./target/release/sonar node
+# or
+cargo run -p sonar-ingestor
 ```
 
 **Start the Scheduler:**
 ```bash
-./target/release/sonar scheduler
+./target/release/sonar scheduler candlestick
+# or
+cargo run -p sonar-scheduler
 ```
 
 ## 🏗️ Architecture

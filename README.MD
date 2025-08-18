@@ -1,14 +1,99 @@
 # Sonar
 
-Sonar is a high-performance, modular indexing and analytics platform for the Solana blockchain. It captures, processes, and serves real-time data from on-chain activities, with a primary focus on token swaps and liquidity pools.
+<p align="center">
+  <a href="https://github.com/sola-hq/sonar/actions/workflows/lint.yml">
+    <img src="https://github.com/sola-hq/sonar/actions/workflows/lint.yml/badge.svg" alt="Lint Status">
+  </a>
+  <a href="https://github.com/sola-hq/sonar/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/sola-hq/sonar" alt="License">
+  </a>
+  <a href="https://github.com/sola-hq/sonar">
+    <img src="https://img.shields.io/github/stars/sola-hq/sonar?style=social" alt="GitHub Stars">
+  </a>
+</p>
+
+<h3 align="center">
+  A high-performance, open-source data platform for the Solana ecosystem.
+</h3>
+
+---
+
+Sonar is a modular indexing and analytics platform for the Solana blockchain. It does the heavy lifting of capturing, processing, and serving real-time and historical on-chain data, so you can focus on building your application.
+
+## 🤔 Why Sonar?
+
+Accessing reliable, low-latency, and comprehensive DeFi data on Solana is complex and expensive. Sonar solves this by providing a self-hosted, open-source solution that is both powerful and flexible.
+
+**Who is this for?**
+
+*   **DeFi Developers**: Build sophisticated applications on top of a solid data foundation.
+*   **Data Analysts & Researchers**: Query rich, granular historical data to uncover market insights.
+*   **Arbitrageurs & MEV Searchers**: Get a real-time firehose of on-chain events to feed your trading strategies.
+*   **Infrastructure Providers**: Offer reliable data endpoints as a service to your users.
 
 ## ✨ Features
 
-- **High-Performance Ingestion**: Connects directly to a Solana Geyser plugin for low-latency data capture.
-- **Modular & Scalable**: Services like ingestion, API, and scheduling are separated into independent crates, allowing them to be scaled separately.
+- **High-Performance Ingestion**: Connects directly to a Solana Geyser plugin for microsecond-level data capture.
+- **Modular & Scalable**: Services for ingestion, API, and scheduling are independent crates, allowing them to be scaled separately.
 - **Multi-Protocol DEX Support**: Includes processors for a wide range of DEX protocols on Solana (Raydium, Orca, Meteora, etc.).
-- **Real-time Data**: Provides real-time access to swaps, token prices, and candlestick data.
-- **Extensible Storage**: Designed to work with different database backends like ClickHouse.
+- **Real-time & Historical Data**: Provides WebSocket streams for live data and a REST API for historical queries.
+- **Extensible by Design**: Easily add support for new protocols or data types.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Rust**: See [rust-toolchain.toml](./rust-toolchain.toml) for the exact version.
+- **Docker**: For running dependent services like Redis and ClickHouse.
+- **Access to Solana Data**:
+    - For full, low-latency performance: A Solana node with the [Geyser plugin](https://solana.com/docs/rpc/geyser-plugins).
+    - For basic functionality and development: A standard Solana RPC endpoint.
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/sola-hq/sonar.git
+cd sonar
+```
+
+### 2. Configure Your Environment
+
+Copy the example environment file. You will need to fill in the required values, especially the database and RPC endpoint URLs.
+
+```bash
+cp .env.example .env
+```
+
+### 3. Run with Docker Compose (Recommended)
+
+For a simple, one-command setup of all services (including Redis and ClickHouse), we recommend using Docker Compose.
+
+*(Note: A `docker-compose.yml` file is being developed and will be available soon. For now, please run the services manually as described below.)*
+
+### 4. Manual Build & Run
+
+Build the project in release mode:
+
+```bash
+cargo build --release
+```
+
+Each service can be run using the main `sonar` binary. You will need to run each command in a separate terminal.
+
+**Start the API Server:**
+```bash
+./target/release/sonar api
+```
+
+**Start the Ingestor (Node):**
+```bash
+./target/release/sonar node
+```
+
+**Start the Scheduler:**
+```bash
+./target/release/sonar scheduler
+```
 
 ## 🏗️ Architecture
 
@@ -75,91 +160,12 @@ graph TD
 	class HTTP,WS user
 ```
 
-### Core Components
-
-- **Ingestor (`crates/ingestor`)**: The heart of the system. Connects to Geyser, filters for relevant transactions, parses them, and publishes them to the message queue.
-- **Scheduler (`crates/scheduler`)**: Consumes messages from the queue and performs scheduled tasks, such as aggregating data for candlesticks or updating token information.
-- **Storage (`crates/storage`)**: Provides a database abstraction layer, currently focused on ClickHouse for time-series data.
-- **API (`crates/api`)**: A web server (Axum) that exposes processed data via a RESTful API and WebSocket streams.
-- **CLI (`bin/`)**: A command-line interface to manage and run the different services.
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- **Rust**: See [rust-toolchain.toml](./rust-toolchain.toml) for the exact version.
-- **Docker**: For running dependent services like Redis and ClickHouse.
-- **Solana Geyser Plugin**: You need access to a Solana node with the Geyser plugin enabled.
-- **Solana RPC**: You need access to a Solana RPC endpoint.
-
-### 1. Installation
-
-First, clone the repository:
-
-```bash
-git clone https://github.com/sola-hq/sonar.git
-cd sonar
-```
-
-### 2. Configuration
-
-Copy the example environment file and fill in the required values, especially the database and RPC endpoint URLs.
-
-```bash
-cp .env.example .env
-```
-
-### 3. Build
-
-Build the project in release mode:
-
-```bash
-cargo build --release
-```
-
-### 4. Running the Services
-
-Each service can be run using the main `sonar` binary. You will need to run each command in a separate terminal.
-
-**Start the API Server:**
-```bash
-cargo run -p sonar api
-```
-
-**Start the Ingestor (Node):**
-```bash
-cargo run -p sonar node
-```
-
-**Start the Scheduler:**
-```bash
-cargo run -p sonar scheduler
-```
-
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a pull request or open an issue. We recommend following these steps:
+We welcome contributions of all kinds! A great way to start is by looking at our open issues. Please feel free to submit a pull request or open an issue.
 
-1.  Fork the repository.
-2.  Create a new branch (`git checkout -b feature/my-new-feature`).
-3.  Make your changes.
-4.  Commit your changes (`git commit -am 'Add some feature'`).
-5.  Push to the branch (`git push origin feature/my-new-feature`).
-6.  Open a new Pull Request.
-
-For more detailed guidelines, please see our (upcoming) `CONTRIBUTING.md` file.
+For more detailed guidelines, please see our [CONTRIBUTING.md](./CONTRIBUTING.md) file (coming soon!).
 
 ## 📄 License
 
 This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for details.
-
-## 💡 Inspiration
-
-This project is inspired by projects like [piotrostr/listen](https://github.com/piotrostr/listen).
-
-## 📚 References
-
-- [solana-etl](https://github.com/blockchain-etl/solana-etl)
-- [piotrostr/listen](https://github.com/piotrostr/listen)
-- [carbon](https://github.com/sevenlabs-hq/carbon)
-- [yellowstone-vixen](https://github.com/rpcpool/yellowstone-vixen)

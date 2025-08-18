@@ -1,63 +1,74 @@
 # Contributing to Sonar
 
-First off, thank you for considering contributing to Sonar! We welcome any help, from reporting a bug to submitting a feature request or a pull request.
+First off, thank you for considering contributing to Sonar! We welcome contributions of all kinds, from bug reports and documentation improvements to new features and protocol integrations.
+
+This document provides guidelines to help make the contribution process smooth and effective for everyone.
 
 ## How Can I Contribute?
 
-### Reporting Bugs
+- **Reporting Bugs**: If you find a bug, please open an issue and provide as much detail as possible, including steps to reproduce it.
+- **Suggesting Enhancements**: If you have an idea for a new feature or an improvement to an existing one, open an issue to start a discussion.
+- **Improving Documentation**: If you find parts of the documentation unclear or incomplete, feel free to submit a pull request with your improvements.
+- **Writing Code**: If you want to fix a bug or implement a new feature, we'd love your help! We recommend starting with issues tagged `good first issue` or `help wanted`.
 
-If you find a bug, please open an issue on our [GitHub Issues](https://github.com/sola-hq/sonar/issues) page.
+## Setting Up Your Development Environment
 
-Please include the following in your bug report:
-- A clear and descriptive title.
-- A detailed description of the problem, including steps to reproduce it.
-- The expected behavior and what actually happened.
-- Your environment details (e.g., OS, Rust version).
+1.  **Fork & Clone**: Fork the repository to your own GitHub account and then clone it to your local machine.
 
-### Suggesting Enhancements
-
-If you have an idea for a new feature or an improvement, please open an issue on our [GitHub Issues](https://github.com/sola-hq/sonar/issues) page. Please use a clear title and describe your idea in detail.
-
-### Pull Requests
-
-We love pull requests! If you'd like to contribute code, please follow these steps:
-
-1.  **Fork the repository** on GitHub.
-2.  **Clone your fork** locally:
     ```bash
-    git clone https://github.com/sola-hq/sonar.git
+    git clone https://github.com/YOUR_USERNAME/sonar.git
     cd sonar
     ```
-3.  **Create a new branch** for your changes:
+
+2.  **Add Upstream Remote**: This will help you keep your fork in sync with the main repository.
+
     ```bash
-    git checkout -b feature/your-feature-name
+    git remote add upstream https://github.com/sola-hq/sonar.git
     ```
-4.  **Make your changes**. Please ensure your code adheres to the project's style.
-5.  **Run the linter and tests** to ensure everything is working correctly:
+
+3.  **Install Dependencies**: Ensure you have the correct Rust toolchain installed (see `rust-toolchain.toml`) and Docker for running services like Redis and ClickHouse.
+
+4.  **Build the Project**: Build the project to make sure everything is set up correctly.
+
     ```bash
-    cargo fmt --all --check
-    cargo clippy --all -- -D warnings
-    cargo test --all
+    cargo build --workspace
     ```
-6.  **Commit your changes** with a clear and descriptive commit message:
+
+## Making Changes
+
+1.  **Create a New Branch**: Always create a new branch for your changes. This makes the review process cleaner.
+
     ```bash
-    git commit -m "feat: Add new feature that does X"
+    git checkout -b feature/my-awesome-feature
     ```
-7.  **Push your branch** to your fork:
+
+2.  **Write Your Code**: Make your changes, and please adhere to the existing code style.
+
+3.  **Code Style & Linting**: We use `rustfmt` for formatting and `clippy` for linting. Before committing, please run:
+
     ```bash
-    git push origin feature/your-feature-name
+    cargo fmt --all
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
     ```
-8.  **Open a Pull Request** on the original repository. Please provide a clear description of the changes you've made.
 
-## Development Setup
+4.  **Add Tests**: If you are adding a new feature or fixing a bug, please add a corresponding test case to prevent future regressions.
 
-1.  Make sure you have the correct Rust toolchain installed (see `rust-toolchain.toml`).
-2.  Install any other dependencies mentioned in the `README.md`.
-3.  Build the project: `cargo build`
-4.  Run the tests: `cargo test --all`
+5.  **Commit Your Changes**: Use a clear and descriptive commit message.
 
-## Code Style
+    ```bash
+    git commit -m "feat: Add support for My Awesome Feature"
+    ```
 
-We use `rustfmt` for formatting and `clippy` for linting. Please run `cargo fmt --all` before committing your changes to ensure your code is formatted correctly.
+## Submitting a Pull Request
 
-Thank you for your contribution!
+1.  **Push Your Branch**: Push your feature branch to your fork.
+
+    ```bash
+    git push origin feature/my-awesome-feature
+    ```
+
+2.  **Open a Pull Request**: Go to the Sonar repository on GitHub and open a new Pull Request. Provide a clear description of the changes you have made.
+
+3.  **Code Review**: One of the project maintainers will review your code. We may ask for some changes before merging. We aim to be responsive and helpful during this process.
+
+Thank you again for your interest in contributing to Sonar! We look forward to your contributions.

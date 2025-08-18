@@ -9,6 +9,7 @@ use crate::{
     CandlestickInterval,
 };
 use anyhow::{Context, Result};
+use chrono::DateTime;
 use clickhouse::{inserter::Inserter, Client};
 use futures::future;
 use std::{sync::Arc, time::Duration};
@@ -761,6 +762,18 @@ impl DatabaseTrait for ClickhouseDb {
             end_time = end_time
         );
         self.client.query(&query).execute().await?;
+        Ok(())
+    }
+
+    /// remove_swap_events removes swap events from the database
+    async fn remove_swap_events(&self, timestamp: i64) -> Result<()> {
+        let dt =
+            DateTime::from_timestamp(timestamp, 0).context("Failed to create UTC timestamp")?;
+        let yyyymmdd = dt.format("%Y%m%d").to_string();
+        let query: String = format!("ALTER TABLE swap_events DROP PARTITION {}", yyyymmdd);
+        debug!(query = %query, "Removing swap events from partition");
+        self.client.query(&query).execute().await?;
+        debug!("Removed swap events from partition: {}", yyyymmdd);
         Ok(())
     }
 }

@@ -17,6 +17,9 @@ thiserror = { workspace = true }
 async-stream = { workspace = true }
 async-trait = { workspace = true }
 
+# chrono
+chrono = { workspace = true }
+
 # clickhouse
 clickhouse = { workspace = true, features = ["native-tls", "inserter"] }
 futures = { workspace = true }

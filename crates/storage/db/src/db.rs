@@ -125,4 +125,7 @@ pub trait DatabaseTrait {
         end_time: i64,
         interval: CandlestickInterval,
     ) -> Result<()>;
+
+    /// remove_swap_events removes swap events from the database
+    async fn remove_swap_events(&self, partition: i64) -> Result<()>;
 }

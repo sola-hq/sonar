@@ -95,6 +95,45 @@ pub async fn aggregate_day_candlesticks(db: Arc<Database>) -> Result<()> {
     .await
 }
 
+/// Aggregate swap events into 1 day candlesticks
+#[instrument(skip(db))]
+pub async fn aggregate_swap_events_into_candlesticks(db: Arc<Database>) -> Result<()> {
+    let time_delta =
+        TimeDelta::new(DAY_IN_SECONDS, 0).context("Failed to create one day time delta")?;
+    let end_time = Utc::now()
+        .date_naive()
+        .and_time(NaiveTime::from_hms_opt(0, 0, 0).context("Failed to create naive time")?)
+        .and_utc();
+    let start_time =
+        end_time.checked_sub_signed(time_delta).context("Failed to subtract time delta")?;
+    let start_ts = start_time.timestamp();
+    let end_ts = end_time.timestamp();
+
+    info!(
+        candlesticks_range = ?(start_ts, end_ts),
+        "Aggregating swap events into candlesticks"
+    );
+
+    let tasks: Vec<_> = vec![
+        CandlestickInterval::OneDay,
+        CandlestickInterval::OneHour,
+        CandlestickInterval::OneMinute,
+    ]
+    .into_iter()
+    .map(|interval| {
+        let db_clone = db.clone();
+        async move { db_clone.aggregate_into_candlesticks(start_ts, end_ts, interval).await }
+    })
+    .collect::<Vec<_>>();
+
+    let results = futures::future::try_join_all(tasks).await.context("Failed to join tasks")?;
+    info!("aggregated swap events into candlesticks succeed: {:?}", results);
+
+    db.remove_swap_events(start_ts).await?;
+    info!("removed swap events from partition: {}", start_ts);
+    Ok(())
+}
+
 /// Run all scheduled jobs
 #[instrument(skip(sched, db))]
 pub async fn run_jobs(sched: &mut JobScheduler, db: Arc<Database>) -> Result<Vec<JobId>> {
@@ -106,11 +145,7 @@ pub async fn run_jobs(sched: &mut JobScheduler, db: Arc<Database>) -> Result<Vec
         })
     }));
 
-    let jobs = vec![
-        create_minute_job(sched, db.clone()).await?,
-        create_hour_job(sched, db.clone()).await?,
-        create_day_job(sched, db.clone()).await?,
-    ];
+    let jobs = vec![aggregate_swap_events_into_candlesticks_job(sched, db.clone()).await?];
 
     if let Err(e) = sched.start().await {
         error!(error = ?e, "Error starting sched");
@@ -121,7 +156,7 @@ pub async fn run_jobs(sched: &mut JobScheduler, db: Arc<Database>) -> Result<Vec
 }
 
 /// Create and configure the minute candlestick job
-async fn create_minute_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
+pub async fn create_minute_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
     let db_clone = db.clone();
     let name = "aggregate minute candlesticks";
     let schedule = MINUTE_SCHEDULE.to_string();
@@ -156,7 +191,8 @@ async fn create_minute_job(sched: &mut JobScheduler, db: Arc<Database>) -> Resul
 
 /// Create and configure the hour candlestick job
 #[instrument(skip(sched, db))]
-async fn create_hour_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
+#[allow(dead_code)]
+pub async fn create_hour_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
     let db_clone = db.clone();
     let name = "aggregate hour candlesticks";
     let schedule = HOUR_SCHEDULE.to_string();
@@ -191,7 +227,8 @@ async fn create_hour_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<
 
 /// Create and configure the day candlestick job
 #[instrument(skip(sched, db))]
-async fn create_day_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
+#[allow(dead_code)]
+pub async fn create_day_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<JobId> {
     let db_clone = db.clone();
     let name = "aggregate day candlesticks";
     let schedule = DAY_SCHEDULE.to_string();
@@ -200,6 +237,44 @@ async fn create_day_job(sched: &mut JobScheduler, db: Arc<Database>) -> Result<J
         let db = db_clone.clone();
         Box::pin(async move {
             let result = aggregate_day_candlesticks(db).await;
+            match result {
+                Ok(()) => {
+                    info!("Aggregated daily candlesticks");
+                }
+                Err(e) => {
+                    error!(error = ?e, "Failed to aggregate day candlesticks");
+                }
+            }
+        })
+    })?;
+
+    let guid = job.guid();
+    info!(job_id = ?guid, "Created day candlestick job");
+
+    // Configure notifications with error handling
+    if let Err(e) = configure_job_notifications(name, sched, job.clone()).await {
+        warn!(error = ?e, job_id = ?guid, "Failed to configure job notifications, but continuing with job creation");
+    }
+
+    // Then add job to sched
+    sched.add(job).await?;
+    Ok(guid)
+}
+
+/// Create and configure the day candlestick job
+#[instrument(skip(sched, db))]
+async fn aggregate_swap_events_into_candlesticks_job(
+    sched: &mut JobScheduler,
+    db: Arc<Database>,
+) -> Result<JobId> {
+    let db_clone = db.clone();
+    let name = "aggregate swap events into candlesticks";
+    let schedule = DAY_SCHEDULE.to_string();
+
+    let job = Job::new_async(&schedule, move |_uuid, _lock| {
+        let db = db_clone.clone();
+        Box::pin(async move {
+            let result = aggregate_swap_events_into_candlesticks(db).await;
             match result {
                 Ok(()) => {
                     info!("Aggregated daily candlesticks");

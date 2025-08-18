@@ -46,18 +46,6 @@ jobs:
           buildkitd-config: .github/buildkitd.toml
 
       # https://github.com/actions/cache/blob/v4/examples.md#rust---cargo
-      - name: Cache Rust dependencies
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-
-      # https://github.com/actions/cache/blob/v4/examples.md#rust---cargo
       # https://github.com/LukeMathWalker/cargo-chef/issues/273
       - name: Rust Build Cache for Docker
         uses: actions/cache@v4

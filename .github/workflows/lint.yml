@@ -53,6 +53,7 @@ jobs:
       matrix:
         include:
           - binary: sonar
+          - binary: sonar-ingestor
     steps:
       - uses: actions/checkout@v4
       - uses: rui314/setup-mold@v1
@@ -76,6 +77,9 @@ jobs:
       - uses: dtolnay/rust-toolchain@nightly
         with:
           components: rustfmt
+      - uses: Swatinem/rust-cache@v2
+        with:
+          cache-on-failure: true
       - name: Run fmt
         run: cargo fmt --all --check
 

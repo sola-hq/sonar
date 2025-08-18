@@ -34,7 +34,7 @@ impl SwapEvent {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize, Deserialize, Clone, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TradeQuery {
     pub tx_hash: String,
     pub address: Option<String>,
@@ -45,7 +45,7 @@ pub struct TradeQuery {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Trade {
     #[serde(rename = "pair")]
     pub pair: String,

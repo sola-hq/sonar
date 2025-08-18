@@ -9,10 +9,11 @@ use serde::Deserialize;
 use serde_with::skip_serializing_none;
 use sonar_db::models::tokens::TokenPrice;
 use tracing::instrument;
+use utoipa::{IntoParams, ToSchema};
 use validator::Validate;
 
 #[skip_serializing_none]
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, IntoParams, ToSchema)]
 pub struct PriceQuery {
     #[validate(length(min = 10))]
     pub token: String,
@@ -20,6 +21,18 @@ pub struct PriceQuery {
     pub timestamp: Option<i32>,
 }
 
+/// Get price for a token at a specific timestamp
+#[utoipa::path(
+    get,
+    path = "/price",
+    params(PriceQuery),
+    responses(
+        (status = 200, description = "Token price retrieved successfully", body = TokenPrice),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 404, description = "Token price not found"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn get_price(
     State(state): State<AppState>,
@@ -47,7 +60,7 @@ pub async fn get_price(
     Ok(Json(price))
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, IntoParams, ToSchema)]
 pub struct PricesQuery {
     #[validate(length(min = 10))]
     pub token: String,
@@ -55,6 +68,17 @@ pub struct PricesQuery {
     pub timestamp: i32,
 }
 
+/// Get prices for multiple tokens at specific timestamps
+#[utoipa::path(
+    post,
+    path = "/prices",
+    request_body = Vec<PricesQuery>,
+    responses(
+        (status = 200, description = "Token prices retrieved successfully", body = Vec<TokenPrice>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    ),
+)]
 #[instrument(skip(state))]
 pub async fn get_prices(
     State(state): State<AppState>,

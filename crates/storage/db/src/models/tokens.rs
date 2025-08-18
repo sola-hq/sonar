@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(clickhouse::Row)]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TopToken {
     pub pubkey: String,
     pub price: f64,
@@ -12,7 +12,7 @@ pub struct TopToken {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TokenStat {
     pub pubkey: String,
     pub price: f64,
@@ -32,7 +32,7 @@ pub struct TokenStat {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TokenDailyStat {
     pub pubkey: String,
     pub timestamp: u64,
@@ -44,7 +44,7 @@ pub struct TokenDailyStat {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TokenPrice {
     pub token: String,
     pub timestamp: i32,
@@ -52,7 +52,7 @@ pub struct TokenPrice {
     pub neatest_timestamp: Option<i32>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Creator {
     pub address: String,
     pub verified: bool,
@@ -92,7 +92,7 @@ pub fn clean_string(s: &str) -> String {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct Token {
     pub retrieval_timestamp: u64,
     pub is_nft: bool,
@@ -109,7 +109,7 @@ pub struct Token {
 }
 
 #[derive(clickhouse::Row)]
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TokenSearch {
     pub token: String,
     pub name: String,
@@ -123,7 +123,7 @@ pub struct TokenSearch {
     pub turnover_24h: f64,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, utoipa::ToSchema)]
 pub struct TokenMetadata {
     pub mint: String,
     pub update_authority: String,

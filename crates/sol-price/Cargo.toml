@@ -4,50 +4,54 @@ version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
-repository.workspace = true
 homepage.workspace = true
+repository.workspace = true
+
+[features]
+default = ["binance"]
+binance = []
 
 [dependencies]
 # sonar crates
 sonar-db = { workspace = true }
 
-# tracing + otel
-tracing = { workspace = true }
-tracing-otel-extra = { workspace = true }
-
 # errors crates
 anyhow = { workspace = true }
+
+# async-trait
+async-trait = { workspace = true }
+
+# chrono
+chrono = { workspace = true }
 
 # dotenv
 dotenvy = { workspace = true }
 
-# async crates
-async-trait = { workspace = true }
+# futures
+futures = { workspace = true }
 futures-util = { workspace = true }
 
-# tokio
-tokio = { workspace = true, features = ["rt", "macros", "signal"] }
-tokio-tungstenite = { workspace = true, features = ["native-tls"] }
-futures = { workspace = true }
+# url
+reqwest = { workspace = true, features = ["json"] }
 
 # serde
 serde = { workspace = true, features = ["derive"] }
 serde_json = { workspace = true }
 
-# chrono
-chrono = { workspace = true }
-
-# url
-reqwest = { workspace = true, features = ["json"] }
-url = { workspace = true }
-
 # Solana dependencies
 solana-account = { workspace = true }
 solana-pubkey = { workspace = true }
 
-[dev-dependencies]
+# tokio
+tokio = { workspace = true, features = ["rt", "macros", "signal"] }
+tokio-tungstenite = { workspace = true, features = ["native-tls"] }
+
+# tracing + otel
+tracing = { workspace = true }
 tracing-otel-extra = { workspace = true }
 
-[features]
-default = ["binance"]
-binance = []
+# url
+url = { workspace = true }
+
+[dev-dependencies]
+tracing-otel-extra = { workspace = true }

@@ -1,13 +1,21 @@
 use axum::response::Json;
 use serde::{Deserialize, Serialize};
+use utoipa::ToSchema;
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Debug, Deserialize, Serialize, PartialEq, ToSchema)]
 pub struct HealthResponse {
     pub status: String,
     pub version: String,
 }
 
 /// Handler to get the liveness of the service
+#[utoipa::path(
+    get,
+    path = "/health",
+    responses(
+        (status = 200, description = "Service is healthy", body = HealthResponse)
+    )
+)]
 pub async fn get_health() -> Json<HealthResponse> {
     let response =
         HealthResponse { status: "ok".to_string(), version: env!("CARGO_PKG_VERSION").to_string() };

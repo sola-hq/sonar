@@ -19,7 +19,7 @@ use tracing::{instrument, warn};
 use validator::Validate;
 
 #[skip_serializing_none]
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TopTokensQuery {
     pub limit: Option<usize>,
     pub min_volume: Option<f64>,
@@ -28,6 +28,17 @@ pub struct TopTokensQuery {
     pub pumpfun: Option<bool>,
 }
 
+#[utoipa::path(
+    get,
+    path = "/top-tokens",
+    params(TopTokensQuery),
+    responses(
+        (status = 200, description = "Top tokens retrieved successfully", body = Vec<TopToken>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
+#[instrument(skip(state))]
 pub async fn get_top_tokens(
     State(state): State<AppState>,
     query: Query<TopTokensQuery>,
@@ -48,13 +59,24 @@ pub async fn get_top_tokens(
 }
 
 #[serde_as]
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TokenStatsQuery {
     #[serde_as(as = "StringWithSeparator::<CommaSeparator, String>")]
     #[validate(length(min = 1))]
     pub tokens: Vec<String>,
 }
 
+#[utoipa::path(
+    get,
+    path = "/token-stats",
+    params(TokenStatsQuery),
+    responses(
+        (status = 200, description = "Token stats retrieved successfully", body = Vec<TokenStat>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
+#[instrument(skip(state))]
 pub async fn get_tokens_stats(
     State(state): State<AppState>,
     query: Query<TokenStatsQuery>,
@@ -63,6 +85,17 @@ pub async fn get_tokens_stats(
     Ok(Json(tokens))
 }
 
+#[utoipa::path(
+    get,
+    path = "/token-daily-stats",
+    params(TokenStatsQuery),
+    responses(
+        (status = 200, description = "Token daily stats retrieved successfully", body = Vec<TokenDailyStat>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
+#[instrument(skip(state))]
 pub async fn get_tokens_daily_stats(
     State(state): State<AppState>,
     query: Query<TokenStatsQuery>,
@@ -71,7 +104,7 @@ pub async fn get_tokens_daily_stats(
     Ok(Json(tokens))
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TokenMetadataQuery {
     #[validate(length(min = 10))]
     pub token: String,
@@ -90,6 +123,16 @@ pub(crate) async fn get_token_from_state(state: &AppState, mint: &str) -> Option
     Some(token)
 }
 
+#[utoipa::path(
+    get,
+    path = "/token",
+    params(TokenMetadataQuery),
+    responses(
+        (status = 200, description = "Token retrieved successfully", body = Option<Token>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn get_token(
     State(state): State<AppState>,
@@ -101,13 +144,23 @@ pub async fn get_token(
 }
 
 #[serde_as]
-#[derive(Clone, Debug, Deserialize, Validate)]
+#[derive(Clone, Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TokensQuery {
     #[serde_as(as = "StringWithSeparator::<CommaSeparator, String>")]
     #[validate(length(min = 1))]
     pub tokens: Vec<String>,
 }
 
+#[utoipa::path(
+    get,
+    path = "/tokens",
+    params(TokensQuery),
+    responses(
+        (status = 200, description = "Tokens retrieved successfully", body = Vec<Token>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn get_tokens(
     State(state): State<AppState>,
@@ -121,13 +174,23 @@ pub async fn get_tokens(
     Ok(Json(tokens))
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct CreateTokenBody {
     #[serde(flatten)]
     #[allow(dead_code)]
     pub token: Token,
 }
 
+#[utoipa::path(
+    post,
+    path = "/token",
+    request_body = CreateTokenBody,
+    responses(
+        (status = 200, description = "Token created successfully", body = Option<Token>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn create_token(
     State(state): State<AppState>,
@@ -140,12 +203,23 @@ pub async fn create_token(
     Ok(Json(token))
 }
 
-#[derive(Debug, Deserialize, Validate)]
+#[derive(Debug, Deserialize, Validate, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct SearchQuery {
     #[validate(length(min = 1, message = "Can not be empty"))]
+    #[schema(rename = "s")]
     pub s: String,
 }
 
+#[utoipa::path(
+    get,
+    path = "/search",
+    params(SearchQuery),
+    responses(
+        (status = 200, description = "Search results retrieved successfully", body = Vec<TokenSearch>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn search(
     State(state): State<AppState>,

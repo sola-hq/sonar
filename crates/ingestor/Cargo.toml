@@ -1,8 +1,19 @@
 [package]
 name = "sonar-ingestor"
-version = "0.1.0"
-edition = "2021"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
 
+[[bin]]
+name = "node"
+path = "src/bin/main.rs"
+
+[features]
+default = []
+hist = []
 
 [dependencies]
 # sonar crates 
@@ -10,26 +21,24 @@ sonar-db = { workspace = true }
 sonar-sol-price = { workspace = true }
 sonar-token-metadata = { workspace = true }
 
-# backon = { workspace = true }
-tracing = { workspace = true }
-tracing-otel-extra = { workspace = true }
-
 # error handling
 anyhow = { workspace = true }
 thiserror = { workspace = true }
 
 # async-trait
 async-trait = { workspace = true }
-tokio = { workspace = true }
 
-# dotenv
-dotenvy = { workspace = true }
+# bigdecimal
+bigdecimal = { workspace = true }
 
 # carbon crates
 carbon-core = { workspace = true }
+
+# carbon datasource
+carbon-helius-atlas-ws-datasource = { workspace = true }
 carbon-log-metrics = { workspace = true }
-carbon-token-program-decoder = { workspace = true }
-carbon-token-2022-decoder = { workspace = true }
+
+# carbon decoders
 carbon-meteora-dlmm-decoder = { workspace = true }
 carbon-meteora-pools-decoder = { workspace = true }
 carbon-orca-whirlpool-decoder = { workspace = true }
@@ -38,46 +47,41 @@ carbon-raydium-amm-v4-decoder = { workspace = true }
 carbon-raydium-clmm-decoder = { workspace = true }
 carbon-raydium-cpmm-decoder = { workspace = true }
 carbon-raydium-launchpad-decoder = { workspace = true }
-
-# need yellowstone protos compat
-solana-account-decoder = { workspace = true }
-solana-client = { workspace = true }
-solana-pubkey = { workspace = true }
-solana-signature = { workspace = true }
-solana-transaction-status = { workspace = true }
-solana-commitment-config = { workspace = true }
-solana-instruction = { workspace = true }
-
-# rpc
-carbon-yellowstone-grpc-datasource = { workspace = true }
-carbon-rpc-block-subscribe-datasource = { workspace = true }
 carbon-rpc-block-crawler-datasource = { workspace = true }
+carbon-rpc-block-subscribe-datasource = { workspace = true }
 carbon-rpc-transaction-crawler-datasource = { workspace = true }
+carbon-token-2022-decoder = { workspace = true }
+carbon-token-program-decoder = { workspace = true }
+carbon-yellowstone-grpc-datasource = { workspace = true }
 
+# clap
+chrono = { workspace = true }
+clap = { workspace = true }
+
+# dotenv
+dotenvy = { workspace = true }
+
+# geyser & helius
 helius = { workspace = true }
-carbon-helius-atlas-ws-datasource = { workspace = true }
-
-# geyser
 yellowstone-grpc-proto = { workspace = true }
 
 # serde
 serde = { workspace = true }
 serde_json = { workspace = true }
 
+# solana 
+solana-account-decoder = { workspace = true }
+solana-client = { workspace = true }
+solana-commitment-config = { workspace = true }
+solana-instruction = { workspace = true }
+solana-pubkey = { workspace = true }
+solana-signature = { workspace = true }
+solana-transaction-status = { workspace = true }
+
 # spl-token
 spl-token = { workspace = true }
+tokio = { workspace = true }
 
-# bigdecimal
-bigdecimal = { workspace = true }
-
-# clap
-clap = { workspace = true }
-chrono = { workspace = true }
-
-[features]
-default = []
-hist = []
-
-[[bin]]
-name = "node"
-path = "src/bin/main.rs"
+# backon = { workspace = true }
+tracing = { workspace = true }
+tracing-otel-extra = { workspace = true }

@@ -6,15 +6,10 @@ rust-version.workspace = true
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
-exclude.workspace = true
 
 [dependencies]
 # sonar crates
 sonar-db = { workspace = true }
-
-# tracing + otel
-tracing = { workspace = true }
-tracing-otel-extra = { workspace = true }
 
 # error handling
 anyhow = { workspace = true }
@@ -22,8 +17,12 @@ anyhow = { workspace = true }
 # time
 chrono = { workspace = true }
 
+dotenvy = { workspace = true }
+
 # async
 tokio = { workspace = true }
 tokio-cron-scheduler = { workspace = true }
 
-dotenvy = { workspace = true }
+# tracing + otel
+tracing = { workspace = true }
+tracing-otel-extra = { workspace = true }

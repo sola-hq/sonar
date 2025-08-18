@@ -8,7 +8,7 @@ use serde::Deserialize;
 use sonar_db::Trade;
 use tracing::instrument;
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, utoipa::IntoParams, utoipa::ToSchema)]
 pub struct TradeQuery {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub address: Option<String>,
@@ -24,6 +24,16 @@ pub struct TradeQuery {
     pub offset: Option<usize>,
 }
 
+#[utoipa::path(
+    get,
+    path = "/trades",
+    params(TradeQuery),
+    responses(
+        (status = 200, description = "Trades retrieved successfully", body = Vec<Trade>),
+        (status = 400, description = "Invalid request parameters"),
+        (status = 500, description = "Internal server error")
+    )
+)]
 #[instrument(skip(state))]
 pub async fn get_trades(
     State(state): State<AppState>,

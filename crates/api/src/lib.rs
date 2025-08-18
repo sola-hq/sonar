@@ -3,7 +3,6 @@ use crate::{
     state::AppState,
     ws::{init_adapter, on_connect, IoProxy},
 };
-
 use axum::{
     routing::{get, post},
     Router,
@@ -33,7 +32,7 @@ pub async fn init_api() -> std::io::Result<()> {
         .expect("Expected PORT to be set")
         .parse()
         .expect("Expected PORT to be a number");
-    let addrs = format!("0.0.0.0:{}", port);
+    let addr = format!("0.0.0.0:{}", port);
 
     debug!("Initializing database...");
     let mut db = make_db_from_env().await.expect("Failed to create database");
@@ -80,14 +79,15 @@ pub async fn init_api() -> std::io::Result<()> {
         )
         .layer(socket_layer)
         .route("/health", get(handlers::health::get_health))
+        .merge(handlers::api_doc())
         .with_state(state);
 
     let io_proxy = IoProxy::new(Arc::new(redis_subscriber), Arc::new(io), None);
     io_proxy.spawn_handlers().await.expect("Failed to spawn handlers");
 
     // Create a `TcpListener` using tokio.
-    let listener = TcpListener::bind(addrs).await.expect("Failed to bind to address");
-    info!("Starting Server on addrs {:?}", listener.local_addr()?);
+    let listener = TcpListener::bind(addr).await.expect("Failed to bind to address");
+    info!("Starting Server on addr {:?}", listener.local_addr()?);
     axum::serve(listener, app)
         .with_graceful_shutdown(shutdown_signal_with_handler(|| async move {
             info!("Received shutdown signal at {:?}", chrono::Utc::now());

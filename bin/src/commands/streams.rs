@@ -39,7 +39,7 @@ impl Command {
             }
             Subcommands::Ws => {
                 info!("Starting ws datasource...");
-                let datasources = make_ws_datasource();
+                let datasources = vec![make_ws_datasource()];
                 app.run(datasources).await.context("Failed to run app")?;
             }
         };

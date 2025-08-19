@@ -60,6 +60,11 @@ use tokio_tungstenite::{
 use tracing::{error, info};
 use url::Url;
 
+// Type aliases to reduce complexity
+type WebSocketStreamType = WebSocketStream<MaybeTlsStream<TcpStream>>;
+type SplitSinkType = SplitSink<WebSocketStreamType, Message>;
+type SplitStreamType = SplitStream<WebSocketStreamType>;
+
 #[derive(Debug, Deserialize)]
 struct TradeData {
     p: String,
@@ -212,7 +217,7 @@ impl SolPriceCache {
      */
     fn spawn_heartbeat_task(
         &self,
-        write: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+        write: Arc<Mutex<SplitSinkType>>,
     ) -> tokio::task::JoinHandle<()> {
         tokio::spawn(async move {
             let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60));
@@ -238,8 +243,8 @@ impl SolPriceCache {
      */
     async fn handle_message_stream(
         &self,
-        read: &mut SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
-        write: &Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+        read: &mut SplitStreamType,
+        write: &Arc<Mutex<SplitSinkType>>,
     ) -> Result<()> {
         while let Some(message) = read.next().await {
             match message {
@@ -283,10 +288,7 @@ impl SolPriceCache {
      * @param write - The write stream to the server.
      * @return Result<()> - The result of the operation.
      */
-    async fn handle_ping_message(
-        &self,
-        write: &Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
-    ) -> Result<()> {
+    async fn handle_ping_message(&self, write: &Arc<Mutex<SplitSinkType>>) -> Result<()> {
         write
             .lock()
             .await
@@ -305,7 +307,7 @@ impl SolPriceCache {
      */
     async fn handle_close_message(&self, frame: &Option<CloseFrame>) -> Result<()> {
         info!("WebSocket closed by server: {:?}", frame);
-        return Ok(());
+        Ok(())
     }
 
     /**
@@ -318,7 +320,7 @@ impl SolPriceCache {
      */
     async fn handle_error_message(&self, error: WsError) -> Result<()> {
         error!("WebSocket error: {:?}", error);
-        return Err(anyhow::anyhow!("WebSocket error: {:?}", error));
+        Err(anyhow::anyhow!("WebSocket error: {:?}", error))
     }
 
     /**

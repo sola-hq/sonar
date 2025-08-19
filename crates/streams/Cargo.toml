@@ -76,7 +76,6 @@ strum_macros = { workspace = true }
 
 # tokio
 tokio = { workspace = true, features = ["rt", "macros", "signal"] }
-tokio-tungstenite = { workspace = true, features = ["native-tls"] }
 
 # tracing + otel
 tracing = { workspace = true }

@@ -7634,7 +7634,6 @@ dependencies = [
  "spl-token 7.0.0",
  "strum_macros",
  "tokio",
- "tokio-tungstenite 0.27.0",
  "tracing",
  "tracing-otel-extra",
  "url",

@@ -17,7 +17,7 @@ resolver = "2"
 [workspace.package]
 version = "0.1.0"
 edition = "2021"
-rust-version = "1.85"
+rust-version = "1.86.0"
 license = "MIT OR Apache-2.0"
 homepage = "https://github.com/sola-hq/sonar"
 repository = "https://github.com/sola-hq/sonar"
@@ -106,7 +106,7 @@ reqwest = { version = "0.12.23", features = ["json"] }
 
 # Serde (serialization)
 serde = { version = "1.0.152", features = ["derive"] }
-serde_json = "1.0.25"
+serde_json = "1.0.143"
 serde_with = { version = "3.13.0", features = ["chrono"] }
 
 # WebSocket
@@ -138,7 +138,7 @@ strum_macros = { version = "0.27" }
 # Tokio runtime
 tokio = { version = "1.44.2", features = ["full"] }
 tokio-cron-scheduler = { version = "0.14.0", features = ["signal"] }
-tokio-tungstenite = { version = "0.20.1", features = ["native-tls"] }
+tokio-tungstenite = { version = "0.27.0", features = ["native-tls"] }
 
 # Tower middleware
 tower = "0.5.2"
@@ -160,8 +160,3 @@ tracing-error = { version = "0.2.0" }
 tracing-otel-extra = { version = "0.30.10", features = ["logger", "env"] }
 url = "2.5.4"
 validator = { version = "0.20.0", features = ["derive"] }
-
-# Curve25519 cryptography
-[workspace.dependencies.curve25519-dalek]
-git = "https://github.com/anza-xyz/curve25519-dalek.git"
-rev = "b500cdc2a920cd5bff9e2dd974d7b97349d61464"

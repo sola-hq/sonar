@@ -45,12 +45,18 @@
 use crate::{SolPriceCacheTrait, SOL_PRICE_CACHE};
 use anyhow::Result;
 use chrono::Utc;
+use futures::stream::{SplitSink, SplitStream};
 use futures_util::{SinkExt, StreamExt};
 use serde::Deserialize;
 use sonar_db::{KvStore, MessageQueue, Trade};
 use std::sync::Arc;
+use tokio::net::TcpStream;
 use tokio::sync::{Mutex, RwLock};
-use tokio_tungstenite::{connect_async, tungstenite::protocol::Message};
+use tokio_tungstenite::tungstenite::protocol::CloseFrame;
+use tokio_tungstenite::{
+    connect_async, tungstenite::error::Error as WsError, tungstenite::protocol::Message,
+    MaybeTlsStream, WebSocketStream,
+};
 use tracing::{error, info};
 use url::Url;
 
@@ -80,6 +86,12 @@ impl SolPriceCache {
         }
     }
 
+    /**
+     * Publish the trade to the message queue and the KV store.
+     *
+     * @param new_price - The new price to publish.
+     * @return Result<()> - The result of the operation.
+     */
     async fn publish_trade(&self, new_price: f64) -> Result<()> {
         let trade: Trade = Trade {
             pair: "SOLUSD".to_string(),
@@ -106,10 +118,22 @@ impl SolPriceCache {
         Ok(())
     }
 
+    /**
+     * Set the price in the cache.
+     *
+     * @param price - The new price to set.
+     */
     pub async fn set_price(&self, price: f64) {
         *self.price.write().await = price;
     }
 
+    /**
+     * Get the price from the cache.
+     *
+     * If the price is 0.0, fetch the price from the REST API.
+     *
+     * @return f64 - The current price.
+     */
     pub async fn get_price(&self) -> f64 {
         let current_price = *self.price.read().await;
         if current_price == 0.0 {
@@ -128,6 +152,11 @@ impl SolPriceCache {
         }
     }
 
+    /**
+     * Fetch the price from the REST API.
+     *
+     * @return Result<f64> - The price.
+     */
     async fn fetch_rest_price(&self) -> Result<f64> {
         let rest_url = "https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT";
         let response = reqwest::get(rest_url).await?;
@@ -152,72 +181,165 @@ impl SolPriceCache {
         }
     }
 
+    /**
+     * Connect to the Binance WebSocket and stream the price data.
+     *
+     * @return Result<()> - The result of the operation.
+     */
     async fn connect_and_stream(&self) -> Result<()> {
         let url = Url::parse("wss://fstream.binance.com/ws/solusdt@aggTrade")?;
-        let (ws_stream, _) = connect_async(url).await?;
-        let price_cache = self.clone();
+        let (ws_stream, _) = connect_async(url.to_string()).await?;
         info!("WebSocket connected to Binance SOL/USDT futures stream");
 
         let (write, mut read) = ws_stream.split();
         let write = Arc::new(Mutex::new(write));
-        let write_clone = write.clone();
+        let heartbeat_handle = self.spawn_heartbeat_task(write.clone());
 
-        // Spawn a task to handle pong responses
-        let pong_task = tokio::spawn(async move {
+        let result = self.handle_message_stream(&mut read, &write).await;
+
+        // abort the heartbeat task when the main loop exits
+        heartbeat_handle.abort();
+        result
+    }
+
+    /**
+     * Spawn the heartbeat task.
+     *
+     * This is used to keep the connection alive.
+     *
+     * @param write - The write stream to the server.
+     * @return tokio::task::JoinHandle<()> - The handle to the heartbeat task.
+     */
+    fn spawn_heartbeat_task(
+        &self,
+        write: Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+    ) -> tokio::task::JoinHandle<()> {
+        tokio::spawn(async move {
+            let mut interval = tokio::time::interval(tokio::time::Duration::from_secs(60));
             loop {
-                tokio::time::sleep(tokio::time::Duration::from_secs(60)).await;
-                if let Err(e) = write_clone.lock().await.send(Message::Pong(vec![])).await {
+                interval.tick().await;
+
+                if let Err(e) = write.lock().await.send(Message::Pong(vec![].into())).await {
                     error!("Failed to send pong: {}", e);
                     break;
                 }
             }
-        });
+        })
+    }
 
-        let result = async {
-            while let Some(message) = read.next().await {
-                match message {
-                    Ok(Message::Text(text)) => match serde_json::from_str::<TradeData>(&text) {
-                        Ok(trade) => {
-                            if let Ok(new_price) = trade.p.parse::<f64>() {
-                                let current_price = price_cache.get_price().await;
-                                if current_price != new_price {
-                                    price_cache.set_price(new_price).await;
-                                    let price_cache = price_cache.clone();
-                                    tokio::spawn(async move {
-                                        if let Err(e) = price_cache.publish_trade(new_price).await {
-                                            error!("Failed to publish price update: {}", e);
-                                        }
-                                    });
-                                }
-                            } else {
-                                error!("Failed to parse price: {}", text);
-                            }
-                        }
-                        Err(e) => error!("Error parsing JSON: {}", e),
-                    },
-                    Ok(Message::Ping(_)) => {
-                        if let Err(e) = write.lock().await.send(Message::Pong(vec![])).await {
-                            error!("Failed to send pong: {}", e);
-                            return Err(anyhow::anyhow!("Pong send error: {}", e));
-                        }
-                    }
-                    Ok(Message::Close(frame)) => {
-                        info!("WebSocket closed by server: {:?}", frame);
-                        return Ok(());
-                    }
-                    Err(e) => {
-                        return Err(anyhow::anyhow!("WebSocket error: {}", e));
-                    }
-                    _ => {}
+    /**
+     * Handle the message stream.
+     *
+     * This is used to handle the message stream from the server.
+     *
+     * @param read - The read stream from the server.
+     * @param write - The write stream to the server.
+     * @return Result<()> - The result of the operation.
+     */
+    async fn handle_message_stream(
+        &self,
+        read: &mut SplitStream<WebSocketStream<MaybeTlsStream<TcpStream>>>,
+        write: &Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+    ) -> Result<()> {
+        while let Some(message) = read.next().await {
+            match message {
+                Ok(Message::Text(text)) => self.handle_text_message(&text).await?,
+                Ok(Message::Ping(_)) => self.handle_ping_message(write).await?,
+                Ok(Message::Close(frame)) => self.handle_close_message(&frame).await?,
+                Err(e) => self.handle_error_message(e).await?,
+                _ => {}
+            }
+        }
+        Ok(())
+    }
+
+    /**
+     * Handle the text message from the server.
+     *
+     * This is used to handle the text message from the server.
+     *
+     * @param text - The text message from the server.
+     * @return Result<()> - The result of the operation.
+     */
+    async fn handle_text_message(&self, text: &str) -> Result<()> {
+        match serde_json::from_str::<TradeData>(text) {
+            Ok(trade) => {
+                if let Ok(new_price) = trade.p.parse::<f64>() {
+                    self.process_price_update(new_price).await;
+                } else {
+                    error!("Failed to parse price: {}", text);
                 }
             }
-            Ok(())
-        }
-        .await;
+            Err(e) => error!("Error parsing JSON: {}", e),
+        };
+        Ok(())
+    }
 
-        // Cancel the pong task when the main loop exits
-        pong_task.abort();
-        result
+    /**
+     * Handle the ping message from the server.
+     *
+     * This is used to keep the connection alive.
+     *
+     * @param write - The write stream to the server.
+     * @return Result<()> - The result of the operation.
+     */
+    async fn handle_ping_message(
+        &self,
+        write: &Arc<Mutex<SplitSink<WebSocketStream<MaybeTlsStream<TcpStream>>, Message>>>,
+    ) -> Result<()> {
+        write
+            .lock()
+            .await
+            .send(Message::Pong(vec![].into()))
+            .await
+            .map_err(|e| anyhow::anyhow!("Failed to send pong: {}", e))
+    }
+
+    /**
+     * Handle the close message from the server.
+     *
+     * This is used to handle the close message from the server.
+     *
+     * @param frame - The close frame from the server.
+     * @return Result<()> - The result of the operation.
+     */
+    async fn handle_close_message(&self, frame: &Option<CloseFrame>) -> Result<()> {
+        info!("WebSocket closed by server: {:?}", frame);
+        return Ok(());
+    }
+
+    /**
+     * Handle the  message from the server.
+     *
+     * This is used to keep the connection alive.
+     *
+     * @param write - The write stream to the server.
+     * @return Result<()> - The result of the operation.
+     */
+    async fn handle_error_message(&self, error: WsError) -> Result<()> {
+        error!("WebSocket error: {:?}", error);
+        return Err(anyhow::anyhow!("WebSocket error: {:?}", error));
+    }
+
+    /**
+     * Process the price update.
+     *
+     * This is used to update the price cache and publish the trade.
+     *
+     * @param new_price - The new price to update the cache with.
+     */
+    async fn process_price_update(&self, new_price: f64) {
+        let current_price = self.get_price().await;
+
+        if current_price != new_price {
+            self.set_price(new_price).await;
+            let price_cache = self.clone();
+            tokio::spawn(async move {
+                if let Err(e) = price_cache.publish_trade(new_price).await {
+                    error!("Failed to publish price update: {}", e);
+                }
+            });
+        }
     }
 }
 

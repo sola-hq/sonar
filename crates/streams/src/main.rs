@@ -13,7 +13,7 @@ async fn main() -> Result<()> {
 
     info!("Starting Streams service...");
 
-    let datasources = make_ws_datasource();
+    let datasources = vec![make_ws_datasource()];
     let app = App::new();
     app.run(datasources).await.context("Failed to run app")?;
 

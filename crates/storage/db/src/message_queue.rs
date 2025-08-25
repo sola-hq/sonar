@@ -1,4 +1,7 @@
-use crate::{kv_store::make_kv_pool, models::swap::Trade};
+use crate::{
+    kv_store::make_kv_pool,
+    models::{events::NewPoolEvent, swap::Trade},
+};
 use anyhow::{Context, Result};
 use bb8_redis::{bb8, RedisConnectionManager};
 use std::env::var;
@@ -14,6 +17,9 @@ pub trait MessageQueueTrait {
         Self: Sized;
 
     async fn publish_trade(&self, trade: &Trade) -> Result<()>;
+
+    /// Publish a new pool event to the message queue
+    async fn publish_new_pool(&self, new_pool: &NewPoolEvent) -> Result<()>;
 }
 
 // Redis implementation of MessageQueue
@@ -51,6 +57,15 @@ impl MessageQueueTrait for RedisMessageQueue {
         let payload =
             serde_json::to_string(price_update).context("Failed to serialize price update")?;
         let channel = "trade";
+        self.publish_message(channel, &payload).await?;
+
+        Ok(())
+    }
+
+    async fn publish_new_pool(&self, new_pool: &NewPoolEvent) -> Result<()> {
+        let payload =
+            serde_json::to_string(new_pool).context("Failed to serialize new pool event")?;
+        let channel = "new-pools";
         self.publish_message(channel, &payload).await?;
 
         Ok(())

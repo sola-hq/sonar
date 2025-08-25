@@ -417,7 +417,8 @@ pub async fn process_token_swap_instruction(
             return Err(SwapError::DbInsertFailure(e));
         }
     };
-    let trade: Trade = swap_event.clone().into();
+
+    let trade: Trade = swap_event.into();
     match message_queue.publish_trade(&trade).await {
         Ok(_) => metrics.increment_message_send_success(),
         Err(e) => {

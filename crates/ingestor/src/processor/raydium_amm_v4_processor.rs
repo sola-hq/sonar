@@ -1,5 +1,5 @@
 use crate::{
-    constants::{USDC_MINT_KEY_STR, USDT_MINT_KEY_STR, WSOL_MINT_KEY_STR},
+    constants::{Dexes, USDC_MINT_KEY_STR, USDT_MINT_KEY_STR, WSOL_MINT_KEY_STR},
     TokenSwapAccounts, TokenSwapHandler,
 };
 use carbon_core::{
@@ -7,9 +7,12 @@ use carbon_core::{
     metrics::MetricsCollection, processor::Processor,
 };
 use carbon_raydium_amm_v4_decoder::instructions::{
-    swap_base_in, swap_base_in::SwapBaseIn, swap_base_out, swap_base_out::SwapBaseOut,
-    RaydiumAmmV4Instruction,
+    initialize2, initialize2::Initialize2, swap_base_in, swap_base_in::SwapBaseIn, swap_base_out,
+    swap_base_out::SwapBaseOut, RaydiumAmmV4Instruction,
 };
+use chrono::Utc;
+use solana_pubkey::Pubkey;
+use sonar_db::models::NewPoolEvent;
 use std::{collections::HashSet, sync::Arc, sync::LazyLock};
 
 /// A set of quote mints supported by Raydium AMM V4
@@ -30,45 +33,60 @@ fn get_raydium_amm_v4_quote_mints() -> Arc<HashSet<String>> {
     Arc::new(RAYDIUM_AMM_V4_QUOTE_MINTS.clone())
 }
 
+fn create_token_swap_accounts(
+    amm: &Pubkey,
+    user_source: &Pubkey,
+    user_destination: &Pubkey,
+    pool_coin: &Pubkey,
+    pool_pc: &Pubkey,
+) -> TokenSwapAccounts {
+    let pair = amm.to_string();
+    let user_adas = HashSet::from([user_source.to_string(), user_destination.to_string()]);
+    let vault_adas = HashSet::from([pool_coin.to_string(), pool_pc.to_string()]);
+
+    TokenSwapAccounts {
+        pair,
+        user_adas,
+        vault_adas,
+        fee_adas: None,
+        quote_mints: get_raydium_amm_v4_quote_mints(),
+    }
+}
+
+pub fn get_new_pool_event(
+    accounts: initialize2::Initialize2InstructionAccounts,
+    timestamp: u64,
+) -> NewPoolEvent {
+    NewPoolEvent {
+        dex: Dexes::RaydiumAmmV4.to_string(),
+        token_a_mint: accounts.coin_mint.to_string(),
+        token_b_mint: accounts.pc_mint.to_string(),
+        pool: accounts.amm.to_string(),
+        timestamp,
+    }
+}
+
 impl From<swap_base_in::SwapBaseInInstructionAccounts> for TokenSwapAccounts {
     fn from(accounts: swap_base_in::SwapBaseInInstructionAccounts) -> Self {
-        let pair = accounts.amm.to_string();
-        let user_adas = HashSet::from([
-            accounts.user_source_token_account.to_string(),
-            accounts.user_destination_token_account.to_string(),
-        ]);
-        let vault_adas = HashSet::from([
-            accounts.pool_coin_token_account.to_string(),
-            accounts.pool_pc_token_account.to_string(),
-        ]);
-        TokenSwapAccounts {
-            pair,
-            user_adas,
-            vault_adas,
-            fee_adas: None,
-            quote_mints: get_raydium_amm_v4_quote_mints(),
-        }
+        create_token_swap_accounts(
+            &accounts.amm,
+            &accounts.user_source_token_account,
+            &accounts.user_destination_token_account,
+            &accounts.pool_coin_token_account,
+            &accounts.pool_pc_token_account,
+        )
     }
 }
 
 impl From<swap_base_out::SwapBaseOutInstructionAccounts> for TokenSwapAccounts {
     fn from(accounts: swap_base_out::SwapBaseOutInstructionAccounts) -> Self {
-        let pair = accounts.amm.to_string();
-        let user_adas = HashSet::from([
-            accounts.user_source_token_account.to_string(),
-            accounts.user_destination_token_account.to_string(),
-        ]);
-        let vault_adas = HashSet::from([
-            accounts.pool_coin_token_account.to_string(),
-            accounts.pool_pc_token_account.to_string(),
-        ]);
-        TokenSwapAccounts {
-            pair,
-            user_adas,
-            vault_adas,
-            fee_adas: None,
-            quote_mints: get_raydium_amm_v4_quote_mints(),
-        }
+        create_token_swap_accounts(
+            &accounts.amm,
+            &accounts.user_source_token_account,
+            &accounts.user_destination_token_account,
+            &accounts.pool_coin_token_account,
+            &accounts.pool_pc_token_account,
+        )
     }
 }
 
@@ -113,6 +131,16 @@ impl Processor for RaydiumAmmV4InstructionProcessor {
                         &meta,
                         &nested_instructions,
                     );
+                }
+            }
+            RaydiumAmmV4Instruction::Initialize2(_) => {
+                let accounts = Initialize2::arrange_accounts(&instruction.accounts);
+                if let Some(accounts) = accounts {
+                    let block_time =
+                        meta.transaction_metadata.block_time.unwrap_or(Utc::now().timestamp())
+                            as u64;
+                    let new_pool_event = get_new_pool_event(accounts, block_time);
+                    self.swap_handler.spawn_new_pool_instruction(&meta, new_pool_event);
                 }
             }
             _ => {}

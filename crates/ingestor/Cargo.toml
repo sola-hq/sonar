@@ -65,6 +65,10 @@ dotenvy = { workspace = true }
 helius = { workspace = true }
 yellowstone-grpc-proto = { workspace = true }
 
+# strum
+strum = { workspace = true }
+strum_macros = { workspace = true }
+
 # serde
 serde = { workspace = true }
 serde_json = { workspace = true }

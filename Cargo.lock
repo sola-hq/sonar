@@ -7546,6 +7546,8 @@ dependencies = [
  "sonar-sol-price",
  "sonar-token-metadata",
  "spl-token 7.0.0",
+ "strum",
+ "strum_macros",
  "thiserror 2.0.14",
  "tokio",
  "tracing",

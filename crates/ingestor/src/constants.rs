@@ -1,5 +1,7 @@
+use serde::{Deserialize, Serialize};
 use solana_pubkey::{pubkey, Pubkey};
 use std::{collections::HashSet, sync::LazyLock};
+use strum::Display;
 
 pub const WSOL_MINT_KEY: Pubkey = pubkey!("So11111111111111111111111111111111111111112");
 pub const USDC_MINT_KEY: Pubkey = pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
@@ -35,3 +37,17 @@ pub static USDT_SET: LazyLock<HashSet<String>> = LazyLock::new(|| {
         USDT_MINT_KEY_STR.to_string(), // usdt
     ])
 });
+
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq, Eq, Hash, Display)]
+#[serde(rename_all = "snake_case")]
+#[strum(serialize_all = "snake_case")]
+pub enum Dexes {
+    MeteoraDlmm,
+    MeteoraPools,
+    OcraWhirlpool,
+    PumpAmm,
+    RaydiumAmmV4,
+    RaydiumClmm,
+    RaydiumCpmm,
+    RaydiumLaunchpad,
+}

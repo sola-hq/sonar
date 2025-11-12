@@ -12,7 +12,7 @@ use carbon_core::{
     transaction::TransactionMetadata,
 };
 use chrono::Utc;
-use sonar_db::{Database, KvStore, MessageQueue, SwapEvent, Trade};
+use sonar_db::{models::NewPoolEvent, Database, KvStore, MessageQueue, SwapEvent, Trade};
 use sonar_sol_price::get_sol_price;
 use sonar_token_metadata::get_token_metadata_with_data;
 use std::collections::HashMap;
@@ -90,6 +90,15 @@ impl TokenSwapHandler {
                         "Transaction: https://solscan.io/tx/{}", transaction_metadata.signature
                     );
                 }
+            }
+        });
+    }
+
+    pub fn spawn_new_pool_instruction(&self, _meta: &InstructionMetadata, event: NewPoolEvent) {
+        let message_queue = self.message_queue.clone();
+        tokio::spawn(async move {
+            if let Err(e) = message_queue.publish_new_pool(&event).await {
+                error!("Failed to publish new pool event: {:?}", e);
             }
         });
     }

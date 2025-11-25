@@ -1,2 +1,2 @@
-msrv = "1.86.0"
+msrv = "1.88.0"
 too-large-for-stack = 128

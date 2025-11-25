@@ -1,5 +1,5 @@
 # Stage 1: Base image with cargo-chef
-FROM lukemathwalker/cargo-chef:latest-rust-1.86.0 AS chef
+FROM lukemathwalker/cargo-chef:latest-rust-1.88.0 AS chef
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	lld clang \
 	protobuf-compiler \
